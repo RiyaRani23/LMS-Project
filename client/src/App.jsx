@@ -1,10 +1,12 @@
 import './App.css'
+import Login from './pages/login.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    
+    <main>
+      <Login/>
+    </main>
   )
 }
 
