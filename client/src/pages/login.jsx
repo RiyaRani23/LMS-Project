@@ -43,7 +43,7 @@ const Login = () => {
       <div className="w-full max-w-sm flex-col gap-6">
         {/* Changed defaultValue to match existing triggers */}
         <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-2 bg-zinc-400">
             <TabsTrigger value="signup">Signup</TabsTrigger>
             <TabsTrigger value="login">Login</TabsTrigger>
           </TabsList>
