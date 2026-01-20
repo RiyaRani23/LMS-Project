@@ -33,6 +33,10 @@ const Login = () => {
     }
   };
 
+  const handleResgistration = (type) => {
+    console.log(type === "signup" ? signupInput : loginInput);
+  }
+
   return (
     <div className="flex min-h-screen justify-center items-center bg-slate-50 p-4">
       <div className="w-full max-w-sm flex-col gap-6">
@@ -60,9 +64,10 @@ const Login = () => {
                     type="text"
                     name="name"
                     value={signupInput.name}
+                    onChange={(e) => changeInputHandler(e, "signup")}
                     placeholder="Mike Tyson"
                     required="true"
-                    onSubmit={changeInputHandler}
+                    
                   />
                 </div>
                 <div className="grid gap-2">
@@ -72,9 +77,10 @@ const Login = () => {
                     type="email"
                     name="email"
                     value={signupInput.email}
+                    onChange={(e) => changeInputHandler(e, "signup")}
                     placeholder="mike@example.com"
                     required="true"
-                    onSubmit={changeInputHandler}
+                    
                   />
                 </div>
                 <div className="grid gap-2">
@@ -84,12 +90,15 @@ const Login = () => {
                     type="password"
                     name="password"
                     value={signupInput.password}
+                    onChange={(e) => changeInputHandler(e, "signup")}
                     required="true"
-                    onSubmit={changeInputHandler}
+                    
                   />
                 </div>
               </CardContent>
-              <CardFooter></CardFooter>
+              <CardFooter>
+                <Button onClick={() => handleResgistration("signup")}>Create Account</Button>
+              </CardFooter>
             </Card>
           </TabsContent>
 
@@ -108,11 +117,12 @@ const Login = () => {
                   <Input
                     id="login-email"
                     type="email"
-                    name="name"
+                    name="email"
                     value={loginInput.email}
+                    onChange={(e) => changeInputHandler(e, "login")}
                     placeholder="mike@example.com"
                     required="true"
-                    onSubmit={changeInputHandler}
+                   
                   />
                 </div>
                 <div className="grid gap-2">
@@ -120,14 +130,16 @@ const Login = () => {
                   <Input
                     id="login-password"
                     type="password"
-                    name="name"
+                    name="password"
                     value={loginInput.password}
                     required="true"
-                    onSubmit={changeInputHandler}
+                    onChange={(e) => changeInputHandler(e, "login")}
                   />
                 </div>
               </CardContent>
-              <CardFooter></CardFooter>
+              <CardFooter>
+                <Button onClick={() => handleResgistration("login")}>Login</Button>
+              </CardFooter>
             </Card>
           </TabsContent>
         </Tabs>
