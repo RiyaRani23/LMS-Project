@@ -1,0 +1,98 @@
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import {
+  User,
+  CreditCard,
+  Settings,
+  LogOut,
+  LayoutDashboard,
+} from "lucide-react";
+import { School } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+const Navbar = () => {
+  const user = false;
+  return (
+    <div className="h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
+      {/* Desktop */}
+      <div className="max-w-7xl mx-auto hidden md:flex items-center justify-between gap-10 h-full ">
+        <div className="flex items-center space-x-2">
+          <School size={"30"} />
+          <h1 className="hidden md:block font-extrabold text-2xl">
+            E-Learning
+          </h1>
+        </div>
+        {/* User icons and dark mode icon */}
+        <div className="flex items-center space-x-4">
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="h-12 w-12 rounded-full border-2 border-background shadow-sm cursor-pointer hover:opacity-90 transition">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    className="rounded-full"
+                  />
+                  <AvatarFallback className="rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 text-white">
+                    AK
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent
+                className="w-48 rounded-xl shadow-xl border bg-background p-2"
+                align="end"
+              >
+                <DropdownMenuLabel className="px-3 py-2 text-sm font-semibold text-muted-foreground">
+                  My Account
+                </DropdownMenuLabel>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuGroup>
+                  {/* Dashboard moved to the top of the group */}
+                  <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
+                    <LayoutDashboard size={16} />
+                    Dashboard
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
+                    <User size={16} />
+                    My Learning
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
+                    <Settings size={16} />
+                    Edit Profile
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+
+                <DropdownMenuSeparator />
+
+                {/* Logout remains at the bottom for safety */}
+                <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer">
+                  <LogOut size={16} />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="flex gap-4 items-center">
+                <Button variant="outline" >Login</Button>
+                <Button>Sign Up</Button>
+            </div>
+          )}
+          <DarkMode/>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;

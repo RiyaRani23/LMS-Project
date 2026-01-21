@@ -81,12 +81,12 @@ const Login = () => {
       toast.error(errorMessage);
     }
   }, [
-    loginIsLoading,
-    registerIsLoading,
-    registerData,
-    loginData,
-    loginError,
-    registerError,
+     registerIsSuccess,
+     loginIsSuccess,
+     registerData,
+     loginData,
+     loginError,
+     registerError,
   ]);
 
   return (
