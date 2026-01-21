@@ -10,13 +10,31 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   User,
-  CreditCard,
   Settings,
   LogOut,
   LayoutDashboard,
+  MenuIcon,
 } from "lucide-react";
 import { School } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
+
+import DarkMode from "@/DarkMode";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
+
+
 const Navbar = () => {
   const user = false;
   return (
@@ -84,15 +102,64 @@ const Navbar = () => {
             </DropdownMenu>
           ) : (
             <div className="flex gap-4 items-center">
-                <Button variant="outline" >Login</Button>
-                <Button>Sign Up</Button>
+              <Button variant="outline">Login</Button>
+              <Button>Sign Up</Button>
             </div>
           )}
-          <DarkMode/>
+          <DarkMode />
         </div>
       </div>
+      {/*Mobile Device */}
+      <div className="flex md:hidden items-center justify-between px-4 h-full">
+        <h1 className="font-extrabold text-2xl">E-Learning</h1>
+        <MobileNavbar />
+      </div>
+      
     </div>
   );
 };
 
 export default Navbar;
+
+const MobileNavbar = () => {
+  const role = "instructor";
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button
+          size="icon"
+          variant="outline"
+          className="rounded-full"
+        >
+          <MenuIcon />
+        </Button>
+      </SheetTrigger>
+
+      <SheetContent className="flex flex-col">
+        <SheetHeader className="flex flex-row items-center justify-between">
+          <SheetTitle>E-Learning</SheetTitle>
+          <DarkMode />
+        </SheetHeader>
+
+        <Separator className="my-4" />
+
+        <nav className="flex flex-col gap-4">
+          <span className="cursor-pointer">My Learning</span>
+          <span className="cursor-pointer">Edit Profile</span>
+          <span className="cursor-pointer text-red-600">Log out</span>
+        </nav>
+
+        {role === "instructor" && (
+          <SheetFooter className="mt-auto">
+            <SheetClose asChild>
+              <Button className="w-full">Dashboard</Button>
+            </SheetClose>
+          </SheetFooter>
+        )}
+      </SheetContent>
+    </Sheet>
+  );
+};
+
+    
