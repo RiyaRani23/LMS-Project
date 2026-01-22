@@ -18,6 +18,7 @@ import {
   useLoginUserMutation,
 } from "@/features/api/authApi";
 import { toast } from "sonner";
+import { Navigate } from "react-router-dom";
 
 const Login = () => {
   const [signupInput, setSignupInput] = useState({
@@ -75,6 +76,7 @@ const Login = () => {
     }
     if(loginIsSuccess && loginData){
       toast.success(loginData.message || "Login Successfully")
+      Navigate('/');
     }
     if(loginError){
       const errorMessage = loginError?.data?.message || "Login failed. Please try again.";

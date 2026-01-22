@@ -4,7 +4,7 @@ import SearchBar from "./SearchBar";
 const Hero = () => {
   return (
     <section className="flex flex-col items-center justify-center w-full md:pt-36 pt-24 px-7 md:px-0 space-y-8 text-center
-      bg-gradient-to-b from-emerald-100 via-emerald-50 to-white
+      bg-gradient-to-b from-purple-400 via-purple-200 to-purple-50
       dark:bg-gradient-to-b dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       
       {/* Heading */}
@@ -31,8 +31,8 @@ const Hero = () => {
 
       {/* CTA */}
       <button className="mt-4 bg-blue-600 text-white px-10 py-3 rounded-full 
-        hover:bg-emerald-500 transition shadow-lg
-        dark:bg-blue-500 dark:hover:bg-emerald-400">
+        hover:bg-purple-700 transition shadow-lg
+        dark:bg-blue-500 dark:hover:bg-purple-400">
         Start Your Learning Journey
       </button>
     </section>
