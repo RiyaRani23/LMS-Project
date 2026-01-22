@@ -16,11 +16,7 @@ import {
   MenuIcon,
 } from "lucide-react";
 import { School } from "lucide-react";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import DarkMode from "@/DarkMode";
 import {
@@ -34,9 +30,8 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 
-
 const Navbar = () => {
-  const user = false;
+  const user = true;
   return (
     <div className="h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
       {/* Desktop */}
@@ -52,7 +47,7 @@ const Navbar = () => {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Avatar className="h-12 w-12 rounded-full border-2 border-background shadow-sm cursor-pointer hover:opacity-90 transition">
+                <Avatar className= "w-10 h-10 cursor-pointer">
                   <AvatarImage
                     src="https://github.com/shadcn.png"
                     className="rounded-full"
@@ -114,7 +109,6 @@ const Navbar = () => {
         <h1 className="font-extrabold text-2xl">E-Learning</h1>
         <MobileNavbar />
       </div>
-      
     </div>
   );
 };
@@ -127,33 +121,40 @@ const MobileNavbar = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button
-          size="icon"
-          variant="outline"
-          className="rounded-full"
-        >
+        <Button size="icon" variant="outline" className="rounded-full">
           <MenuIcon />
         </Button>
       </SheetTrigger>
 
       <SheetContent className="flex flex-col">
         <SheetHeader className="flex flex-row items-center justify-between">
-          <SheetTitle>E-Learning</SheetTitle>
+          <SheetTitle className="font-extrabold text-2xl">
+            E-Learning
+          </SheetTitle>
           <DarkMode />
         </SheetHeader>
 
         <Separator className="my-4" />
 
         <nav className="flex flex-col gap-4">
-          <span className="cursor-pointer">My Learning</span>
-          <span className="cursor-pointer">Edit Profile</span>
-          <span className="cursor-pointer text-red-600">Log out</span>
+          <span className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
+            <User size={16} />
+            My Learning
+          </span>
+          <span className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
+            <Settings size={16} />
+            Edit Profile
+          </span>
+          <span className="flex items-center gap-2 rounded-lg px-3 py-2 text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer">
+            <LogOut size={16} />
+            Log out
+          </span>
         </nav>
 
         {role === "instructor" && (
-          <SheetFooter className="mt-auto">
+          <SheetFooter>
             <SheetClose asChild>
-              <Button className="w-full">Dashboard</Button>
+              <Button type="submit" className="w-full">Dashboard</Button>
             </SheetClose>
           </SheetFooter>
         )}
@@ -161,5 +162,3 @@ const MobileNavbar = () => {
     </Sheet>
   );
 };
-
-    
