@@ -6,7 +6,7 @@ import MainLayout from './Layout/MainLayout'
 import { RouterProvider } from 'react-router'
 import Courses from './pages/student/Courses'
 import MyLearning from './pages/student/MyLearning'
-import Profile from './pages/student/Profile'
+import Profile from './pages/student/Profile/Profile'
 
 const appRouter = createBrowserRouter([
   {

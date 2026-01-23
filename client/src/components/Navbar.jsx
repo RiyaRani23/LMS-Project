@@ -63,7 +63,7 @@ const Navbar = () => {
                 className="w-48 rounded-xl shadow-xl border bg-background p-2"
                 align="end"
               >
-                <DropdownMenuLabel className="px-3 py-2 text-sm font-semibold text-muted-foreground">
+                <DropdownMenuLabel className="px-3 py-2 text-sm font-bold text-blue-500 ">
                   My Account
                 </DropdownMenuLabel>
 

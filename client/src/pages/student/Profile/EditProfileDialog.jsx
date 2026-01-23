@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,37 +11,44 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Loader2, UploadCloud } from "lucide-react"; 
+import { Loader2, UploadCloud } from "lucide-react";
 
 const EditProfileDialog = () => {
-  const isLoading = false; 
+  const isLoading = false;
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="rounded-md border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700 transition-all">
+        <Button
+          className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600
+    text-white border-none rounded-full px-8 py-2 font-semibold shadow-lg shadow-indigo-200 dark:shadow-indigo-900/40
+     transition-all duration-300 hover:shadow-indigo-400/50 hover:-translate-y-0.5 active:scale-95 w-full sm:w-auto"
+        >
           Edit Profile
         </Button>
       </DialogTrigger>
-      
+
       <DialogContent className="sm:max-w-[425px] rounded-2xl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-slate-800 dark:text-slate-100">
             Student Profile
           </DialogTitle>
           <DialogDescription className="text-slate-500">
-            Update your account details to keep your instructors informed.
+            Update your info to stay connected with your courses.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-5 py-4">
           {/* Name Input Section */}
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-sm font-bold text-slate-700 dark:text-slate-300">
+            <Label
+              htmlFor="name"
+              className="text-sm font-bold text-slate-700 dark:text-slate-300"
+            >
               Full Name
             </Label>
-            <Input 
-              id="name" 
+            <Input
+              id="name"
               placeholder="Enter your name"
               autoComplete="name"
               defaultValue="Aarav Kumar"
@@ -55,19 +62,21 @@ const EditProfileDialog = () => {
               Profile Picture
             </Label>
             <div className="flex items-center justify-center w-full">
-              <label 
-                htmlFor="profilePhoto" 
+              <label
+                htmlFor="profilePhoto"
                 className="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-xl cursor-pointer bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                   <UploadCloud className="w-8 h-8 mb-2 text-slate-400" />
-                  <p className="text-xs text-slate-500">Click to upload or drag and drop</p>
+                  <p className="text-xs text-slate-500">
+                    Click to upload or drag and drop
+                  </p>
                 </div>
-                <Input 
-                  id="profilePhoto" 
-                  type="file" 
-                  accept="image/*" 
-                  className="hidden" 
+                <Input
+                  id="profilePhoto"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
                 />
               </label>
             </div>
@@ -75,7 +84,7 @@ const EditProfileDialog = () => {
         </div>
 
         <DialogFooter>
-          <Button 
+          <Button
             disabled={isLoading}
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-6 rounded-xl shadow-lg shadow-indigo-200 dark:shadow-none transition-all active:scale-[0.98]"
           >
