@@ -42,6 +42,16 @@ export const authApi = createApi({
       })
     })
   }),
+
+  // eslint-disable-next-line no-undef
+  updateUser: builder.mutation({
+  query: (formData) => ({
+    url: "/profile/update",
+    method: "PUT",
+    body: formData,
+    credentials: "include"
+  }), 
+}),
   });
    
-export const { useLoginUserMutation, useRegisterUserMutation, useLoadUserQuery } = authApi;
+export const { useLoginUserMutation, useRegisterUserMutation, useLoadUserQuery, updateUserMutation } = authApi;
