@@ -6,6 +6,7 @@ import MainLayout from './Layout/MainLayout'
 import { RouterProvider } from 'react-router'
 import Courses from './pages/student/Courses'
 import MyLearning from './pages/student/MyLearning'
+import Profile from './pages/student/Profile'
 
 const appRouter = createBrowserRouter([
   {
@@ -30,7 +31,7 @@ const appRouter = createBrowserRouter([
       },
       {
         path:"profile",
-        element:<MyLearning/>
+        element:<Profile/>
       },
       
     ],
