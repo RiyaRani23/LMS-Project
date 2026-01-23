@@ -7,7 +7,7 @@ import ProfileSkeleton from "./ProfileSkeleton";
 
 const Profile = () => {
   const enrolledCourses = [1, 2];
-  const isLoading = false; 
+  const isLoading = true; 
   if (isLoading) return <ProfileSkeleton />;
 
   return (
