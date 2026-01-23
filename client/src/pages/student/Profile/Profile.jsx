@@ -4,10 +4,13 @@ import { Button } from "@/components/ui/button";
 import EditProfileDialog from "./EditProfileDialog"; // We will create this next
 import Course from "../Course";
 import ProfileSkeleton from "./ProfileSkeleton";
+import { useLoadUserQuery } from "@/features/api/authApi";
 
 const Profile = () => {
+
+  const {data, isLoading } = useLoadUserQuery();
+  console.log(data);
   const enrolledCourses = [1, 2];
-  const isLoading = true; 
   if (isLoading) return <ProfileSkeleton />;
 
   return (
