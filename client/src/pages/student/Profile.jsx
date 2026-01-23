@@ -37,8 +37,6 @@ const Profile = () => {
               </p>
             </div>
           </div>
-          
-          {/* Edit Profile Trigger */}
           <EditProfileDialog />
         </div>
       </div>
