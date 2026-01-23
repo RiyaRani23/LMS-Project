@@ -30,9 +30,11 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const user = true;
+  const user = false;
+  const navigate = useNavigate();
   return (
     <div className="h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
       {/* Desktop */}
@@ -48,7 +50,7 @@ const Navbar = () => {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Avatar className= "w-10 h-10 cursor-pointer">
+                <Avatar className="w-10 h-10 cursor-pointer">
                   <AvatarImage
                     src="https://github.com/shadcn.png"
                     className="rounded-full"
@@ -78,17 +80,12 @@ const Navbar = () => {
 
                   <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
                     <User size={16} />
-                    <Link to="my-learning">
-                    My learning
-                    </Link>
+                    <Link to="my-learning">My learning</Link>
                   </DropdownMenuItem>
 
                   <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
                     <Settings size={16} />
-                    <Link to="profile">
-                    Edit Profile 
-                    </Link>
-                   
+                    <Link to="profile">Edit Profile</Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
 
@@ -103,8 +100,10 @@ const Navbar = () => {
             </DropdownMenu>
           ) : (
             <div className="flex gap-4 items-center">
-              <Button variant="outline">Login</Button>
-              <Button>Sign Up</Button>
+              <Button variant="outline" onClick={() => navigate("/login")}>
+                Login
+              </Button>
+              <Button onClick={() => navigate("/login")}>Sign Up</Button>
             </div>
           )}
           <DarkMode />
@@ -160,7 +159,9 @@ const MobileNavbar = () => {
         {role === "instructor" && (
           <SheetFooter>
             <SheetClose asChild>
-              <Button type="submit" className="w-full">Dashboard</Button>
+              <Button type="submit" className="w-full">
+                Dashboard
+              </Button>
             </SheetClose>
           </SheetFooter>
         )}
