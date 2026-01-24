@@ -1,10 +1,12 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import EditProfileDialog from "./EditProfileDialog";
 import Course from "../Course";
 import ProfileSkeleton from "./ProfileSkeleton";
 import { useLoadUserQuery } from "@/features/api/authApi";
+import { BookOpen } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const Profile = () => {
   const { data, isLoading, isError } = useLoadUserQuery();
@@ -50,7 +52,7 @@ const Profile = () => {
             <div className="flex items-center gap-2">
               <span className="font-semibold text-gray-700 dark:text-gray-300">Role:</span>
               <p className="uppercase text-xs bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-200 px-3 py-1 rounded-full font-bold">
-                {user?.role.toUpperCase}
+                {user?.role.toUpperCase()}
               </p>
             </div>
           </div>
@@ -64,7 +66,22 @@ const Profile = () => {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {user?.enrolledCourses?.length === 0 ? (
-            <p className="text-gray-500">You haven't enrolled in any courses yet.</p>
+            <div className="flex flex-col items-center justify-center py-16 px-4 text-center bg-gray-50 dark:bg-slate-900/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800">
+            <div className="bg-indigo-100 dark:bg-indigo-900/30 p-4 rounded-full mb-4">
+              <BookOpen className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              No Courses Enrolled
+            </h3>
+            <p className="text-gray-500 dark:text-gray-400 max-w-sm mb-8">
+              It looks like you haven't started your learning journey yet. Explore our courses to find the perfect one for you!
+            </p>
+            <Link to="/">
+              <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-2 rounded-lg shadow-md transition-all active:scale-95">
+                Browse Courses
+              </Button>
+            </Link>
+          </div>
           ) : (
             user?.enrolledCourses?.map((course) => (
               <Course key={course._id} course={course} />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,10 +11,46 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Loader2, UploadCloud } from "lucide-react";
+import { Loader2, UploadCloud, User } from "lucide-react";
+import { useLoadUserQuery } from "@/features/api/authApi";
+import { toast } from "sonner";
+import { useUpdateUserMutation } from "@/features/api/authApi";
 
 const EditProfileDialog = () => {
-  const isLoading = false;
+  const [name, setName] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState("");
+
+  const { data, isLoading } = useLoadUserQuery();
+  const [updateUser, { isLoading: updateUserIsLoading, isError, isSuccess }] = useUpdateUserMutation();
+
+  const onChangeHandler = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setProfilePhoto(file);
+    }
+  };
+
+  const {user} = data;
+ 
+  const updateUserHandler = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("name", name);
+    if (profilePhoto) {
+      formData.append("profilePhoto", profilePhoto);
+    }
+    
+    await updateUser(formData);
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message || "Profile updated!");
+    }
+    if (isError) {
+      toast.error(isError.data?.message || "Something went wrong");
+    }
+  }, [isSuccess, isError, data]);
 
   return (
     <Dialog>
@@ -51,7 +87,8 @@ const EditProfileDialog = () => {
               id="name"
               placeholder="Enter your name"
               autoComplete="name"
-              defaultValue="Aarav Kumar"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="h-11 border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-lg"
             />
           </div>
@@ -74,6 +111,7 @@ const EditProfileDialog = () => {
                 </div>
                 <Input
                   id="profilePhoto"
+                  onChange={onChangeHandler}
                   type="file"
                   accept="image/*"
                   className="hidden"
@@ -84,19 +122,21 @@ const EditProfileDialog = () => {
         </div>
 
         <DialogFooter>
-          <Button
-            disabled={isLoading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-6 rounded-xl shadow-lg shadow-indigo-200 dark:shadow-none transition-all active:scale-[0.98]"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Updating...
-              </>
-            ) : (
-              "Save Changes"
-            )}
-          </Button>
+        <Button
+          type="submit" 
+          disabled={isLoading}
+          onClick={updateUserHandler}
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-6 rounded-xl shadow-lg shadow-indigo-200 dark:shadow-none transition-all active:scale-[0.98]"
+>
+   {updateUserIsLoading ? (
+    <>
+      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+      <span className="ml-2">Updating Profile...</span>
+    </>
+  ) : (
+    "Save Changes"
+  )}
+</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

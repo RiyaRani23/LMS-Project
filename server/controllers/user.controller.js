@@ -106,20 +106,21 @@ export const updateProfile = async (req, res) => {
         success: false,
       });
     }
+    
+    const updatedData = { name };
 
     if (profilePhoto) {
       // If the user already has a photo, delete the old one from Cloudinary first
       if (user.photoUrl) {
         const publicId = user.photoUrl.split("/").pop().split(".")[0]; // extract public id
-        deleteMediaFromCloudinary(publicId);
+        await deleteMediaFromCloudinary(publicId);
       }
 
       // Upload the new photo
       const cloudResponse = await uploadMedia(profilePhoto.path);
-      const photoUrl = cloudResponse.secure_url;
+      updatedData.photoUrl = cloudResponse.secure_url;
     }
 
-    const updatedData = { name, photoUrl };
     const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {
       new: true,
     }).select("-password");
