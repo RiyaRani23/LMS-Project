@@ -34,9 +34,10 @@ import { useNavigate } from "react-router-dom";
 import { useLogoutUserMutation } from "@/features/api/authApi";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const user = true;
+  const {user} = useSelector(store=>store.auth);
   const navigate = useNavigate();
   const [logoutUser, { isSuccess }] = useLogoutUserMutation();
 
@@ -68,7 +69,7 @@ const Navbar = () => {
               <DropdownMenuTrigger asChild>
                 <Avatar className="w-10 h-10 cursor-pointer">
                   <AvatarImage
-                    src="https://github.com/shadcn.png"
+                    src={user?.photoUrl  || "https://github.com/shadcn.png"}
                     className="rounded-full"
                   />
                   <AvatarFallback className="rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 text-white">

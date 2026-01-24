@@ -46,7 +46,17 @@ export const authApi = createApi({
       query:() => ({
         url:"profile",
         method:"GET"
-      })
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const result = await queryFulfilled;
+          dispatch(
+            userLoggedIn({ user: result.data.user })
+          );
+        } catch (error) {
+          console.error("Login failed: ", error);
+        }
+        },
     }),
     updateUser: builder.mutation({
       query: (formData) => ({

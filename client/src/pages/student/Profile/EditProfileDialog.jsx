@@ -30,7 +30,7 @@ const EditProfileDialog = () => {
     }
   };
 
-  const {user} = data;
+  // const user = data && data.user;
  
   const updateUserHandler = async (e) => {
     e.preventDefault();
