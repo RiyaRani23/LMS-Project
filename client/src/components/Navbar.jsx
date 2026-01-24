@@ -29,12 +29,28 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
+import { data, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useLogoutUserMutation } from "@/features/api/authApi";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const Navbar = () => {
-  const user = false;
+  const user = true;
   const navigate = useNavigate();
+  const [logoutUser, { isSuccess }] = useLogoutUserMutation();
+
+  const logoutHandler = async () => {
+    await logoutUser(); 
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message || "Logged out successfully.");
+      navigate("/login");
+    }
+  }, [isSuccess, navigate]);
+
   return (
     <div className="h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
       {/* Desktop */}
@@ -92,7 +108,7 @@ const Navbar = () => {
                 <DropdownMenuSeparator />
 
                 {/* Logout remains at the bottom for safety */}
-                <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer">
+                <DropdownMenuItem onClick={logoutHandler} className="flex items-center gap-2 rounded-lg px-3 py-2 text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer">
                   <LogOut size={16} />
                   Log out
                 </DropdownMenuItem>
@@ -150,7 +166,8 @@ const MobileNavbar = () => {
             <Settings size={16} />
             Edit Profile
           </span>
-          <span className="flex items-center gap-2 rounded-lg px-3 py-2 text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer">
+          <span className="flex items-center gap-2 rounded-lg px-3 py-2 text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer"
+         >
             <LogOut size={16} />
             Log out
           </span>
