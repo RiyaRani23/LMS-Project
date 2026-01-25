@@ -7,6 +7,7 @@ import { RouterProvider } from 'react-router'
 import Courses from './pages/student/Courses'
 import MyLearning from './pages/student/MyLearning'
 import Profile from './pages/student/Profile/Profile'
+import { Sidebar } from 'lucide-react'
 
 const appRouter = createBrowserRouter([
   {
@@ -33,6 +34,11 @@ const appRouter = createBrowserRouter([
         path:"profile",
         element:<Profile/>
       },
+      // admin routes start from here
+      {
+         path:"admin",
+         element:<Sidebar/>
+      }
       
     ],
   },
