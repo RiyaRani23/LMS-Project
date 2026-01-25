@@ -29,7 +29,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { data, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useLogoutUserMutation } from "@/features/api/authApi";
 import { useEffect } from "react";
@@ -39,7 +39,7 @@ import { useSelector } from "react-redux";
 const Navbar = () => {
   const {user} = useSelector(store=>store.auth);
   const navigate = useNavigate();
-  const [logoutUser, { isSuccess }] = useLogoutUserMutation();
+  const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
 
   const logoutHandler = async () => {
     await logoutUser(); 
@@ -50,7 +50,7 @@ const Navbar = () => {
       toast.success(data?.message || "Logged out successfully.");
       navigate("/login");
     }
-  }, [isSuccess, navigate]);
+  }, [isSuccess, data, navigate]);
 
   return (
     <div className="h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
@@ -89,15 +89,18 @@ const Navbar = () => {
                 <DropdownMenuSeparator />
 
                 <DropdownMenuGroup>
-                  {/* Dashboard moved to the top of the group */}
-                  <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
+                {user.role === "instructor" && (
+                   <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
                     <LayoutDashboard size={16} />
                     Dashboard
                   </DropdownMenuItem>
+                )}
+                  
 
-                  <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
+                  <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer"
+                  onClick={() => navigate("/my-learning")}>
                     <User size={16} />
-                    <Link to="my-learning">My learning</Link>
+                    <span>My Learning</span>
                   </DropdownMenuItem>
 
                   <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
@@ -129,7 +132,7 @@ const Navbar = () => {
       {/*Mobile Device */}
       <div className="flex md:hidden items-center justify-between px-4 h-full">
         <h1 className="font-extrabold text-2xl">E-Learning</h1>
-        <MobileNavbar />
+        <MobileNavbar user={user} logoutHandler={logoutHandler} />
       </div>
     </div>
   );
@@ -137,8 +140,8 @@ const Navbar = () => {
 
 export default Navbar;
 
-const MobileNavbar = () => {
-  const role = "instructor";
+const MobileNavbar = ({ user, logoutHandler }) => {
+  const navigate = useNavigate();
 
   return (
     <Sheet>
@@ -150,38 +153,49 @@ const MobileNavbar = () => {
 
       <SheetContent className="flex flex-col">
         <SheetHeader className="flex flex-row items-center justify-between">
-          <SheetTitle className="font-extrabold text-2xl">
-            E-Learning
-          </SheetTitle>
+          <SheetTitle>E-Learning</SheetTitle>
           <DarkMode />
         </SheetHeader>
-
         <Separator className="my-4" />
 
-        <nav className="flex flex-col gap-4">
-          <span className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
-            <User size={16} />
-            My Learning
-          </span>
-          <span className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
-            <Settings size={16} />
-            Edit Profile
-          </span>
-          <span className="flex items-center gap-2 rounded-lg px-3 py-2 text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer"
-         >
-            <LogOut size={16} />
-            Log out
-          </span>
-        </nav>
-
-        {role === "instructor" && (
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button type="submit" className="w-full">
-                Dashboard
-              </Button>
-            </SheetClose>
-          </SheetFooter>
+        {user ? (
+          <>
+            <nav className="flex flex-col gap-4">
+              <div 
+                onClick={() => navigate("/my-learning")} 
+                className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer"
+              >
+                <User size={16} />
+                <span>My Learning</span>
+              </div>
+              <div 
+                onClick={() => navigate("/profile")} 
+                className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer"
+              >
+                <Settings size={16} />
+                <span>Edit Profile</span>
+              </div>
+              <div 
+                onClick={logoutHandler} 
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-red-600 hover:bg-red-50 cursor-pointer"
+              >
+                <LogOut size={16} />
+                <span>Log out</span>
+              </div>
+            </nav>
+            {user.role === "instructor" && (
+              <SheetFooter className="mt-4">
+                <Button onClick={() => navigate("/admin/dashboard")} className="w-full">
+                  Dashboard
+                </Button>
+              </SheetFooter>
+            )}
+          </>
+        ) : (
+          <div className="flex flex-col gap-4">
+             <Button variant="outline" onClick={() => navigate("/login")}>Login</Button>
+             <Button onClick={() => navigate("/login")}>Sign Up</Button>
+          </div>
         )}
       </SheetContent>
     </Sheet>

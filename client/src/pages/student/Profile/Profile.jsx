@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import EditProfileDialog from "./EditProfileDialog";
 import Course from "../Course";
@@ -9,7 +9,11 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const Profile = () => {
-  const { data, isLoading, isError } = useLoadUserQuery();
+  const { data, isLoading, isError,refetch } = useLoadUserQuery();
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   if (isLoading) return <ProfileSkeleton />;
 

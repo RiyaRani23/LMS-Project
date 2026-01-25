@@ -20,7 +20,7 @@ const EditProfileDialog = () => {
   const [name, setName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState("");
 
-  const { data, isLoading } = useLoadUserQuery();
+  const { data, isLoading, refetch } = useLoadUserQuery();
   const [updateUser, { isLoading: updateUserIsLoading, isError, isSuccess }] = useUpdateUserMutation();
 
   const onChangeHandler = (e) => {
@@ -45,6 +45,7 @@ const EditProfileDialog = () => {
 
   useEffect(() => {
     if (isSuccess) {
+      refetch();
       toast.success(data?.message || "Profile updated!");
     }
     if (isError) {

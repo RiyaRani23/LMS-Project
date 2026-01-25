@@ -19,10 +19,13 @@ import {
 } from "@/features/api/authApi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { userLoggedIn } from "@/features/authSlice";
 
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [signupInput, setSignupInput] = useState({
     name: "",
     email: "",
@@ -78,6 +81,7 @@ const Login = () => {
     }
     if(loginIsSuccess && loginData){
       toast.success(loginData.message || "Login Successfully")
+      dispatch(userLoggedIn({ user: loginData.user }));
      navigate("/");
     }
     if(loginError){
@@ -92,6 +96,7 @@ const Login = () => {
      loginError,
      registerError,
      navigate,
+     dispatch,
   ]);
 
   return (
