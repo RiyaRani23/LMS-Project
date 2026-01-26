@@ -13,33 +13,33 @@ import {
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import { useCreateCourseMutation } from "@/features/api/courseApi";
+// import { useCreateCourseMutation } from "@/features/api/courseApi";
 import { toast } from "sonner";
 
 const AddCourse = () => {
   const [courseTitle, setCourseTitle] = useState("");
-  const [category, setCategory] = useState("");
+   const [category, setCategory] = useState("");
 
-  const [createCourse, { data, isLoading, isSuccess, error }] = useCreateCourseMutation();
-  const navigate = useNavigate();
+  // // const [createCourse, { data, isLoading, isSuccess, error }] = useCreateCourseMutation();
+   const navigate = useNavigate();
 
-  const getSelectedCategory = (value) => {
-    setCategory(value);
-  };
+  // const getSelectedCategory = (value) => {
+  //   setCategory(value);
+  // };
 
-  const createCourseHandler = async () => {
-    await createCourse({ courseTitle, category });
-  };
+  // const createCourseHandler = async () => {
+  //   await createCourse({ courseTitle, category });
+  // };
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success(data?.message || "Course created.");
-      navigate("/admin/course"); // Redirect back to dashboard or to edit page
-    }
-  }, [isSuccess, error]);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     toast.success(data?.message || "Course created.");
+  //     navigate("/admin/course"); // Redirect back to dashboard or to edit page
+  //   }
+  // }, [isSuccess, error]);
 
   return (
-    <div className="flex-1 mx-10">
+    <div className="flex-1 mx-10 mt-15">
       <div className="mb-4">
         <h1 className="font-bold text-xl">
           Lets add course, add some basic course details for your new course
@@ -50,18 +50,20 @@ const AddCourse = () => {
       </div>
       <div className="space-y-4">
         <div>
-          <Label>Title</Label>
+          <Label className="font-bold text-lg">Title</Label>
           <Input
             type="text"
             value={courseTitle}
             onChange={(e) => setCourseTitle(e.target.value)}
             placeholder="Your Course Name"
+            className="bg-gray-100"
           />
         </div>
         <div>
-          <Label>Category</Label>
-          <Select onValueChange={getSelectedCategory}>
-            <SelectTrigger className="w-45">
+          <Label className="font-bold text-lg">Category</Label>
+          {/* <Select onValueChange={getSelectedCategory}> */}
+          <Select>
+            <SelectTrigger className="w-45 bg-gray-100">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
             <SelectContent>
@@ -82,7 +84,7 @@ const AddCourse = () => {
           </Select>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={() => navigate("/admin/course")}>
+          {/* <Button variant="outline" onClick={() => navigate("/admin/course")}>
             Back
           </Button>
           <Button disabled={isLoading} onClick={createCourseHandler}>
@@ -94,7 +96,7 @@ const AddCourse = () => {
             ) : (
               "Create"
             )}
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>

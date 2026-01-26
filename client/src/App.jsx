@@ -37,7 +37,7 @@ const appRouter = createBrowserRouter([
         path:"profile",
         element:<Profile/>
       },
-      // admin routes start from here
+      
       {
          path:"admin",
          element:<Sidebar/>,
