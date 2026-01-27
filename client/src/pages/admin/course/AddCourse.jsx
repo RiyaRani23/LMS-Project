@@ -13,30 +13,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-// import { useCreateCourseMutation } from "@/features/api/courseApi";
+import { useCreateCourseMutation } from "@/features/api/courseApi";
 import { toast } from "sonner";
 
 const AddCourse = () => {
   const [courseTitle, setCourseTitle] = useState("");
    const [category, setCategory] = useState("");
 
-  // // const [createCourse, { data, isLoading, isSuccess, error }] = useCreateCourseMutation();
+   const [createCourse, { data, isLoading, isSuccess, error }] = useCreateCourseMutation();
    const navigate = useNavigate();
 
-  // const getSelectedCategory = (value) => {
-  //   setCategory(value);
-  // };
+  const getSelectedCategory = (value) => {
+    setCategory(value);
+  };
 
-  // const createCourseHandler = async () => {
-  //   await createCourse({ courseTitle, category });
-  // };
+  const createCourseHandler = async () => {
+    await createCourse({ courseTitle, category });
+  };
 
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     toast.success(data?.message || "Course created.");
-  //     navigate("/admin/course"); // Redirect back to dashboard or to edit page
-  //   }
-  // }, [isSuccess, error]);
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message || "Course created.");
+      navigate("/admin/course"); // Redirect back to dashboard or to edit page
+    }
+  }, [isSuccess, error]);
 
   return (
     <div className="flex-1 mx-10 mt-15">
@@ -61,8 +61,7 @@ const AddCourse = () => {
         </div>
         <div>
           <Label className="font-bold text-lg">Category</Label>
-          {/* <Select onValueChange={getSelectedCategory}> */}
-          <Select>
+          <Select onValueChange={getSelectedCategory}>
             <SelectTrigger className="w-45 bg-gray-100">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
@@ -84,10 +83,11 @@ const AddCourse = () => {
           </Select>
         </div>
         <div className="flex items-center gap-2">
-          {/* <Button variant="outline" onClick={() => navigate("/admin/course")}>
+           <Button className="bg-blue-500 hover:bg-blue-600" onClick={() => navigate("/admin/course")}>
             Back
           </Button>
-          <Button disabled={isLoading} onClick={createCourseHandler}>
+           <Button disabled={isLoading} onClick={createCourseHandler}
+           className="bg-blue-400 hover:bg-blue-500">
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -96,7 +96,7 @@ const AddCourse = () => {
             ) : (
               "Create"
             )}
-          </Button> */}
+          </Button>  
         </div>
       </div>
     </div>
