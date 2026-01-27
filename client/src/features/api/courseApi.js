@@ -1,24 +1,21 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const COURSE_API = "http://localhost:8080/api/v1/course"
+
 export const courseApi = createApi({
   reducerPath: "courseApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/v1/course", // Ensure this matches your backend URL
-    prepareHeaders: (headers) => {
-      // Add any custom headers here if needed
-      return headers;
-    },
+    baseUrl: COURSE_API, 
+   credentials:"include"
   }),
-  tagTypes: ["Course"], // Tag for cache invalidation
+  tagTypes: ["Course"], 
   endpoints: (builder) => ({
-    // 1. Create Course (POST)
     createCourse: builder.mutation({
-      query: (courseData) => ({
+      query: (courseTitle, category) => ({
         url: "/",
         method: "POST",
-        body: courseData,
+        body: {courseTitle, category},
       }),
-      invalidatesTags: ["Course"], // Refetches courses list after adding a new one
     }),
 
     // 2. Get All Creator Courses (GET)

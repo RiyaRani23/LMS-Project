@@ -34,9 +34,9 @@ const AddCourse = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message || "Course created.");
-      navigate("/admin/course"); // Redirect back to dashboard or to edit page
+      navigate("/admin/course");
     }
-  }, [isSuccess, error]);
+  }, [isSuccess, data, navigate, error]);
 
   return (
     <div className="flex-1 mx-10 mt-15">
