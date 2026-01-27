@@ -4,11 +4,11 @@ const COURSE_API = "http://localhost:8080/api/v1/course"
 
 export const courseApi = createApi({
   reducerPath: "courseApi",
+  tagTypes:['Refetch_Creator_Course'],
   baseQuery: fetchBaseQuery({
     baseUrl: COURSE_API, 
-   credentials:"include"
+   credentials:"include",
   }),
-  tagTypes: ["Course"], 
   endpoints: (builder) => ({
     createCourse: builder.mutation({
       query: ({courseTitle, category}) => ({
@@ -16,12 +16,12 @@ export const courseApi = createApi({
         method: "POST",
         body: {courseTitle, category},
       }),
-      invalidatesTags: ["Course"],
+     providesTags:['Refetch_Creator_Course']
     }),
 
     getCreatorCourses: builder.query({
       query: () => "/",
-      providesTags: ["Course"], 
+       providesTags:['Refetch_Creator_Course'],
     }),
 
     // 3. Edit/Update Course (PUT)
