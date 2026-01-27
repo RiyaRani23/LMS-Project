@@ -19,10 +19,9 @@ export const courseApi = createApi({
       invalidatesTags: ["Course"],
     }),
 
-    // 2. Get All Creator Courses (GET)
     getCreatorCourses: builder.query({
       query: () => "/",
-      providesTags: ["Course"], // Sets up the cache
+      providesTags: ["Course"], 
     }),
 
     // 3. Edit/Update Course (PUT)

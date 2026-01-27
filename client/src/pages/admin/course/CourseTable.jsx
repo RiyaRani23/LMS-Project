@@ -12,21 +12,20 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Edit, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-// import { useGetCreatorCoursesQuery } from "@/features/api/courseApi";
+import { useGetCreatorCoursesQuery } from "@/features/api/courseApi";
 
 const CourseTable = () => {
   const navigate = useNavigate();
   
-  // Fetching data using RTK Query
-//   const { data, isLoading } = useGetCreatorCoursesQuery();
+   const { data, isLoading } = useGetCreatorCoursesQuery();
 
-//   if (isLoading) {
-//     return (
-//       <div className="flex items-center justify-center h-40">
-//         <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
-//       </div>
-//     );
-//   }
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-40">
+        <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white dark:bg-zinc-900 border rounded-xl shadow-sm p-4 mt-12">
@@ -48,9 +47,9 @@ const CourseTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {/* {data?.courses?.map((course) => (
+          {data?.courses?.map((course) => (
             <TableRow key={course._id}>
-              <TableCell className="font-medium">
+              <TableCell className="font-bold text-md">
                 {course.coursePrice ? `₹${course.coursePrice}` : "Free"}
               </TableCell>
               <TableCell>
@@ -71,15 +70,15 @@ const CourseTable = () => {
                 </Button>
               </TableCell>
             </TableRow>
-          ))} */}
+          ))}
         </TableBody>
       </Table>
 
-      {/* {data?.courses?.length === 0 && (
+      {data?.courses?.length === 0 && (
         <div className="text-center py-10 text-gray-500">
           No courses found. Start by creating one!
         </div>
-      )} */}
+      )}
     </div>
   );
 };

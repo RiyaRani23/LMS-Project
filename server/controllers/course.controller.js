@@ -28,11 +28,19 @@ export const createCourse = async (req, res) => {
     }
 };
 
-// 2. Get All Courses Created by a Specific Instructor
+//  Get All Courses Created by a Specific Instructor
 export const getCreatorCourses = async (req, res) => {
     try {
         const userId = req.id;
         const courses = await Course.find({ creator: userId });
+
+        if(!courses){
+            return res.status(404).json
+({
+    courses:[],
+    message:"Courses not found"
+
+})        }
         
         return res.status(200).json({
             courses
