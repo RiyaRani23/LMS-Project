@@ -11,11 +11,12 @@ export const courseApi = createApi({
   tagTypes: ["Course"], 
   endpoints: (builder) => ({
     createCourse: builder.mutation({
-      query: (courseTitle, category) => ({
+      query: ({courseTitle, category}) => ({
         url: "/",
         method: "POST",
         body: {courseTitle, category},
       }),
+      invalidatesTags: ["Course"],
     }),
 
     // 2. Get All Creator Courses (GET)
