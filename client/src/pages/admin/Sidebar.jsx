@@ -4,7 +4,7 @@ import { Link, Outlet } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <div className="flex">
+    <div className="flex bg-gray-200">
       <div className="hidden lg:block w-62.5 sm:w-75 space-y-8 border-r border-gray-300 dark:border-gray-700 h-screen sticky top-0 pt-20">
         <div className="space-y-4 p-5">
           <Link

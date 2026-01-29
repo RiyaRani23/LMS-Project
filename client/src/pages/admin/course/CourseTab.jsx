@@ -79,6 +79,10 @@ const CourseTab = () => {
             placeholder="Ex. Become a Fullstack Developer from scratch"
           />
         </div>
+        <div className="space-y-2">
+             <Label className="text-lg font-medium">Detailed Description</Label>
+             <RichTextEditor input={input} setInput={setInput} />
+          </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1">
             <Label>Category</Label>
@@ -89,10 +93,15 @@ const CourseTab = () => {
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Category</SelectLabel>
-                  <SelectItem value="Next JS">Next JS</SelectItem>
-                  <SelectItem value="Data Science">Data Science</SelectItem>
+                  <SelectItem value="Next JS">Next JS</SelectItem>                                <SelectItem value="Data Science">Data Science</SelectItem>
                   <SelectItem value="Frontend Development">Frontend Development</SelectItem>
                   <SelectItem value="Fullstack Development">Fullstack Development</SelectItem>
+                  <SelectItem value="MERN Stack">MERN Stack</SelectItem>
+                  <SelectItem value="Javascript">Javascript</SelectItem>
+                  <SelectItem value="Python">Python</SelectItem>
+                  <SelectItem value="Docker">Docker</SelectItem>
+                  <SelectItem value="MongoDB">MongoDB</SelectItem>
+                  <SelectItem value="HTML">HTML</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -107,10 +116,6 @@ const CourseTab = () => {
               placeholder="999"
               className="w-fit"
             />
-          </div>
-          <div className="space-y-2">
-             <Label className="text-lg font-medium">Detailed Description</Label>
-             <RichTextEditor input={input} setInput={setInput} />
           </div>
         </div>
         <div className="flex items-center gap-2">
