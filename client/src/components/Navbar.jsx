@@ -72,7 +72,7 @@ const Navbar = () => {
                     src={user?.photoUrl  || "https://github.com/shadcn.png"}
                     className="rounded-full"
                   />
-                  <AvatarFallback className="rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 text-white">
+                  <AvatarFallback className="rounded-full bg-linear-to-tr from-indigo-500 to-purple-600 text-white">
                     AK
                   </AvatarFallback>
                 </Avatar>

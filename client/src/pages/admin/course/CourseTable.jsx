@@ -57,7 +57,7 @@ const CourseTable = () => {
                   {course.isPublished ? "Published" : "Draft"}
                 </Badge>
               </TableCell>
-              <TableCell className="font-semibold uppercase truncate max-w-[200px]">
+              <TableCell className="font-semibold uppercase truncate max-w-50">
                 {course.courseTitle}
               </TableCell>
               <TableCell className="text-right">
