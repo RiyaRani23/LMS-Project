@@ -13,8 +13,10 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import RichTextEditor from "@/components/RichTextEditor";
 
 const CourseTab = () => {
+  const isPublished = "false";
   const [input, setInput] = useState({
     courseTitle: "",
     subTitle: "",
@@ -38,11 +40,23 @@ const CourseTab = () => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Basic Information</CardTitle>
+      <CardHeader className="flex flex-row justify-between">
+      <div>
+      <CardTitle>Basic Information</CardTitle>
         <CardDescription>
           Make changes to your course here. Click save when you're done.
         </CardDescription>
+      </div>
+        <div className="space-x-2">
+          <Button variant="outline" >
+            {
+              isPublished ? "Unpublished" : "Publish"
+            }
+          </Button>
+          <Button>
+            Remove Course
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-1">
@@ -69,7 +83,7 @@ const CourseTab = () => {
           <div className="space-y-1">
             <Label>Category</Label>
             <Select onValueChange={selectCategory}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-45">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
@@ -93,6 +107,10 @@ const CourseTab = () => {
               placeholder="999"
               className="w-fit"
             />
+          </div>
+          <div className="space-y-2">
+             <Label className="text-lg font-medium">Detailed Description</Label>
+             <RichTextEditor input={input} setInput={setInput} />
           </div>
         </div>
         <div className="flex items-center gap-2">
