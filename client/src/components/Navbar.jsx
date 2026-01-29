@@ -66,18 +66,19 @@ const Navbar = () => {
         <div className="flex items-center space-x-4">
           {user ? (
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Avatar className="w-10 h-10 cursor-pointer">
-                  <AvatarImage
-                    src={user?.photoUrl  || "https://github.com/shadcn.png"}
-                    className="rounded-full"
-                  />
-                  <AvatarFallback className="rounded-full bg-linear-to-tr from-indigo-500 to-purple-600 text-white">
-                    AK
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-
+             <DropdownMenuTrigger asChild>
+  <div className="outline-none"> 
+    <Avatar className="w-10 h-10 cursor-pointer">
+      <AvatarImage
+        src={user?.photoUrl || "https://github.com/shadcn.png"}
+        className="rounded-full"
+      />
+      <AvatarFallback className="rounded-full bg-linear-to-tr from-indigo-500 to-purple-600 text-white">
+        AK
+      </AvatarFallback>
+    </Avatar>
+  </div>
+</DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-48 rounded-xl shadow-xl border bg-background p-2"
                 align="end"
@@ -146,9 +147,11 @@ const MobileNavbar = ({ user, logoutHandler }) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button size="icon" variant="outline" className="rounded-full">
-          <MenuIcon />
-        </Button>
+        <span> 
+    <Button size="icon" variant="outline" className="rounded-full">
+      <MenuIcon />
+    </Button>
+  </span>
       </SheetTrigger>
 
       <SheetContent className="flex flex-col">

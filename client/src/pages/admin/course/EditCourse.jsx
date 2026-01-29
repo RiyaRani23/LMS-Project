@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import CourseTab from "./CourseTab"; // Import the child file
+import CourseTab from "./CourseTab";
 
 const EditCourse = () => {
   const params = useParams();

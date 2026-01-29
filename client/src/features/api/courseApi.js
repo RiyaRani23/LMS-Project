@@ -25,13 +25,14 @@ export const courseApi = createApi({
     }),
 
     editCourse: builder.mutation({
-      query: ({ courseId, categories }) => ({
-        url: `/${courseId}`,
-        method: "PUT",
-        body: categories,
-      }),
-      invalidatesTags: ["Course"],
-    }),
+    query: ({ courseId, formData }) => ({
+    url: `/${courseId}`,
+    method: "PUT",
+    body: formData,
+  }),
+  invalidatesTags: ["Course", "Refetch_Creator_Course"],
+}),
+
 
     // 4. Get Course By ID (GET)
     getCourseById: builder.query({

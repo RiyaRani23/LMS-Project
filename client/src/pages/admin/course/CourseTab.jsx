@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,9 +14,13 @@ import {
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import RichTextEditor from "@/components/RichTextEditor";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEditCourseMutation, useGetCourseByIdQuery } from "@/features/api/courseApi";
+import { toast } from "sonner";
 
 const CourseTab = () => {
+  const { courseId } = useParams();
+  const { data: courseData, isSuccess: isGetSuccess } = useGetCourseByIdQuery(courseId);
   const isPublished = "false";
   const [input, setInput] = useState({
     courseTitle: "",
@@ -25,11 +29,12 @@ const CourseTab = () => {
     category: "",
     courseLevel: "",
     coursePrice: "",
-    thumbnail: ""
+    courseThumbnail: ""
   });
   const [previewThumbnail, setPreviewThumbnail] = useState("");
-  const navigate = useNavigate;
-  const isLoading = false; // We will connect this to RTK Query later
+  const navigate = useNavigate();
+  const [file, setFile] = useState("");
+  const [editCourse, { isSuccess, isLoading, error }] = useEditCourseMutation();
 
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
@@ -43,21 +48,64 @@ const CourseTab = () => {
   const selectCourseLevel = (value) => {
     setInput({ ...input, courseLevel: value });
   };
-
-  // get file
-  const selectThumbnail = (e) => {
-    const file = e.target.files?.[0];
-    if(file){
-      setInput({...input, courseThumnail:file});
-      const fileReader = new FileReader();
-      fileReader.onload = () => setPreviewThumbnail(fileReader.result);
-      fileReader.readAsDataURL(file);
+  const fileChangeHandler = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
     }
   };
 
-  const updateCourseHandler =() => {
-    console.log(input);
+  const selectThumbnail = (e) => {
+  const selectedFile = e.target.files?.[0];
+  if (selectedFile) {
+    setFile(selectedFile); // Store the actual file for upload
+    const fileReader = new FileReader();
+    fileReader.onload = () => setPreviewThumbnail(fileReader.result);
+    fileReader.readAsDataURL(selectedFile);
   }
+};
+
+  const updateCourseHandler = async () => {
+    const formData = new FormData();
+    formData.append("courseTitle", input.courseTitle);
+    formData.append("subTitle", input.subTitle);
+    formData.append("description", input.description);
+    formData.append("category", input.category);
+    formData.append("courseLevel", input.courseLevel);
+    formData.append("coursePrice", input.coursePrice);
+    if (file) {
+        formData.append("courseThumbnail", file); 
+    }
+
+    await editCourse({ courseId, formData });
+  };
+
+  // 1. Hook to pre-fill data when loading the page
+  useEffect(() => {
+    if (isGetSuccess && courseData?.course) {
+      const course = courseData.course;
+      setInput({
+        courseTitle: course.courseTitle || "",
+        subTitle: course.subTitle || "",
+        description: course.description || "",
+        category: course.category || "",
+        courseLevel: course.courseLevel || "",
+        coursePrice: course.coursePrice || "",
+      });
+      setPreviewThumbnail(course.courseThumbnail || "");
+    }
+  }, [isGetSuccess, courseData]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Course updated successfully!");
+      navigate("/admin/course");
+    }
+    if (error) {
+      toast.error(error.data?.message || "Failed to update course");
+    }
+  }, [isSuccess, navigate, error]); 
+
 
   return (
     <Card>
@@ -171,8 +219,8 @@ const CourseTab = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onclick={() => navigate("/admin/course")}>Cancel</Button>
-          <Button disabled={isLoading} onclick={updateCourseHandler}>
+          <Button variant="outline" onClick={() => navigate("/admin/course")}>Cancel</Button>
+          <Button disabled={isLoading} onClick={updateCourseHandler}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
