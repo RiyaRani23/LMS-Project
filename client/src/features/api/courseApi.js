@@ -24,7 +24,6 @@ export const courseApi = createApi({
        providesTags:['Refetch_Creator_Course'],
     }),
 
-    // 3. Edit/Update Course (PUT)
     editCourse: builder.mutation({
       query: ({ courseId, categories }) => ({
         url: `/${courseId}`,

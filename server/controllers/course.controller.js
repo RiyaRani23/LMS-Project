@@ -1,4 +1,5 @@
 import { Course } from "../models/course.model.js";
+import { uploadMedia, deleteMediaFromCloudinary } from "../utils/cloudinary.js";
 
 export const createCourse = async (req, res) => {
     try {
@@ -53,28 +54,50 @@ export const getCreatorCourses = async (req, res) => {
     }
 };
 
-// 3. Edit Course Details
 export const editCourse = async (req, res) => {
     try {
         const courseId = req.params.courseId;
         const { courseTitle, subTitle, description, category, courseLevel, coursePrice } = req.body;
-        
-        // We will handle thumbnail separately with Cloudinary later
+        const thumbnail = req.file;
+
         let course = await Course.findById(courseId);
-        if(!course){
+        if (!course) {
             return res.status(404).json({
-                message:"Course not found!"
+                message: "Course not found!"
             });
         }
 
-        course = await Course.findByIdAndUpdate(courseId, req.body, { new: true });
+        let courseThumbnail = course.courseThumbnail; // Keep old one by default
+
+        if (thumbnail) {
+            if (course.courseThumbnail) {
+                const publicId = course.courseThumbnail.split("/").pop().split(".")[0];
+                await deleteMediaFromCloudinary(publicId);
+            }
+
+            const uploadResponse = await uploadMedia(thumbnail.path);
+            courseThumbnail = uploadResponse.secure_url;
+        }
+
+        const updateData = { 
+            courseTitle, 
+            subTitle, 
+            description, 
+            category, 
+            courseLevel, 
+            coursePrice, 
+            courseThumbnail 
+        };
+
+        course = await Course.findByIdAndUpdate(courseId, updateData, { new: true });
 
         return res.status(200).json({
             course,
             message: "Course updated successfully."
         });
+
     } catch (error) {
-        console.log(error);
+        console.error("Edit Course Error:", error);
         return res.status(500).json({
             message: "Failed to update course"
         });
