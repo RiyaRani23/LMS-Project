@@ -46,7 +46,7 @@ export const login = async (req, res) => {
     }
 
     generateToken(res, user, `Welcome back, ${user.name}!`);
-    return res.status(200).json({ message: "Login successful", user });
+   
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error", error: error.message });

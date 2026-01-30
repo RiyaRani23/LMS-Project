@@ -28,7 +28,7 @@ const CourseTable = () => {
   }
 
   return (
-    <div className="bg-white dark:bg-zinc-900 border rounded-xl shadow-sm p-4 mt-12">
+    <div className="bg-white dark:bg-zinc-900 border rounded-xl shadow-sm p-4 ">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold">Manage Courses</h2>
         <Button onClick={() => navigate("create")} size="sm">

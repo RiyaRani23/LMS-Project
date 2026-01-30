@@ -33,8 +33,6 @@ export const courseApi = createApi({
   invalidatesTags: ["Course", "Refetch_Creator_Course"],
 }),
 
-
-    // 4. Get Course By ID (GET)
     getCourseById: builder.query({
       query: (id) => `/${id}`,
       providesTags: (result, error, id) => [{ type: "Course", id }],
