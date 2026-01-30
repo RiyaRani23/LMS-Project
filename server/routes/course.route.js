@@ -5,7 +5,9 @@ import {
     createCourse, 
     editCourse, 
     getCreatorCourses,
-    getCourseById, 
+    getCourseById,
+    createLecture,
+    getCourseLectures, 
 } from "../controllers/course.controller.js";
 
 const router = express.Router();
@@ -17,5 +19,9 @@ router.route("/").get(isAuthenticated, getCreatorCourses);
 router.route("/:courseId")
   .get(isAuthenticated, getCourseById) 
   .put(isAuthenticated, upload.single("courseThumbnail"), editCourse);
+
+router.route("/:courseId/lecture")
+    .post(isAuthenticated, createLecture)
+    .get(isAuthenticated, getCourseLectures);;
 
 export default router;

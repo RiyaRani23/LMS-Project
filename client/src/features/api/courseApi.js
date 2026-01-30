@@ -37,13 +37,28 @@ export const courseApi = createApi({
       query: (id) => `/${id}`,
       providesTags: (result, error, id) => [{ type: "Course", id }],
     }),
+
+    createLecture: builder.mutation({
+      query: ({ courseId, lectureTitle }) => ({
+        url: `/${courseId}/lecture`,
+        method: "POST",
+        body: { lectureTitle },
+      }),
+      invalidatesTags: ["Lecture"], 
+    }),
+
+    getCourseLectures: builder.query({
+      query: (courseId) => `/${courseId}/lecture`,
+      providesTags: ["Lecture"],
+    }), 
   }),
 });
 
-// Auto-generated hooks based on the endpoints
 export const {
   useCreateCourseMutation,
   useGetCreatorCoursesQuery,
   useEditCourseMutation,
   useGetCourseByIdQuery,
+  useCreateLectureMutation, 
+  useGetCourseLecturesQuery,
 } = courseApi;
