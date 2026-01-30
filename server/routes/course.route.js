@@ -7,7 +7,9 @@ import {
     getCreatorCourses,
     getCourseById,
     createLecture,
-    getCourseLectures, 
+    getCourseLectures,
+    editLecture, 
+    getLectureById
 } from "../controllers/course.controller.js";
 
 const router = express.Router();
@@ -23,5 +25,8 @@ router.route("/:courseId")
 router.route("/:courseId/lecture")
     .post(isAuthenticated, createLecture)
     .get(isAuthenticated, getCourseLectures);;
+
+router.route("/lecture/:lectureId").get(isAuthenticated, getLectureById);
+router.route("/:courseId/lecture/:lectureId").patch(isAuthenticated, upload.single("videoFile"), editLecture);
 
 export default router;

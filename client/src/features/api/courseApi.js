@@ -51,6 +51,33 @@ export const courseApi = createApi({
       query: (courseId) => `/${courseId}/lecture`,
       providesTags: ["Lecture"],
     }), 
+
+    getLectureById: builder.query({
+      query: (lectureId) => ({
+        url: `/lecture/${lectureId}`,
+        method: "GET",
+      }),
+      providesTags: ["Lecture"],
+    }),
+
+    // 2. Update lecture details (Title, Video, Free Preview)
+    editLecture: builder.mutation({
+      query: ({ courseId, lectureId, formData }) => ({
+        url: `/${courseId}/lecture/${lectureId}`,
+        method: "PATCH",
+        body: formData, // This handles the Multipart/Form-Data for videos
+      }),
+      invalidatesTags: ["Lecture"],
+    }),
+
+    // courseApi.js
+removeLecture: builder.mutation({
+  query: (lectureId) => ({
+    url: `/lecture/${lectureId}`,
+    method: "DELETE",
+  }),
+  invalidatesTags: ["Lecture"], // This refreshes the list automatically
+}),
   }),
 });
 
@@ -61,4 +88,7 @@ export const {
   useGetCourseByIdQuery,
   useCreateLectureMutation, 
   useGetCourseLecturesQuery,
+  useEditLectureMutation, 
+  useGetLectureByIdQuery,
+  useRemoveLectureMutation
 } = courseApi;

@@ -68,7 +68,7 @@ const CreateLecture = () => {
           </Button>
           <Button 
             disabled={isLoading} 
-           // onClick={createLectureHandler}
+            onClick={createLectureHandler}
             className="bg-blue-500 hover:bg-blue-600 text-white"
           >
             {isLoading ? (
@@ -90,12 +90,12 @@ const CreateLecture = () => {
                 Loading lectures...
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-2 ">
               {lectureData?.lectures?.length > 0 ? (
                 lectureData.lectures.map((lecture, index) => (
                   <div 
                     key={lecture._id} 
-                    className="flex items-center justify-between p-4 bg-gray-50 border rounded-lg"
+                    className="flex items-center justify-between p-4 bg-gray-200 border rounded-lg"
                   >
                     <span className="font-medium">
                         Lecture {index + 1}: {lecture.lectureTitle}
@@ -104,7 +104,7 @@ const CreateLecture = () => {
                         variant="ghost" 
                         size="sm" 
                         className="text-blue-600"
-                        onClick={() => navigate(`edit/${lecture._id}`)}
+                        onClick={() => navigate(`${lecture._id}`)}
                     >
                         Edit
                     </Button>

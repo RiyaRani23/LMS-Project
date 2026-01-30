@@ -200,3 +200,99 @@ export const getCourseLectures = async (req, res) => {
         });
     }
 };
+
+export const editLecture = async (req, res) => {
+    try {
+        const { lectureId } = req.params;
+        const { lectureTitle, isPreviewFree } = req.body;
+        const videoFile = req.file;
+
+        const lecture = await Lecture.findById(lectureId);
+        if (!lecture) return res.status(404).json({ message: "Lecture not found" });
+
+        // Update basic info
+        if (lectureTitle) lecture.lectureTitle = lectureTitle;
+        if (isPreviewFree !== undefined) lecture.isPreviewFree = isPreviewFree;
+
+        // Video Handling
+        if (videoFile) {
+            // 1. Delete old video from Cloudinary if it exists
+            if (lecture.publicId) {
+                await deleteMediaFromCloudinary(lecture.publicId);
+            }
+            // 2. Upload new video
+            const cloudResponse = await uploadMedia(videoFile.path);
+            lecture.videoUrl = cloudResponse.secure_url;
+            lecture.publicId = cloudResponse.public_id;
+        }
+
+        await lecture.save();
+        return res.status(200).json({ lecture, message: "Lecture updated successfully!" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Failed to update lecture" });
+    }
+};
+
+// Get a single lecture by its ID
+export const getLectureById = async (req, res) => {
+    try {
+        const { lectureId } = req.params;
+
+        // Find the lecture in the database
+        const lecture = await Lecture.findById(lectureId);
+
+        // Check if the lecture exists
+        if (!lecture) {
+            return res.status(404).json({
+                message: "Lecture not found!",
+                success: false
+            });
+        }
+
+        // Return the lecture data
+        return res.status(200).json({
+            lecture,
+            success: true
+        });
+    } catch (error) {
+        console.error("GET LECTURE BY ID ERROR:", error);
+        return res.status(500).json({
+            message: "Failed to get lecture",
+            success: false
+        });
+    }
+};
+
+// course.controller.js
+
+export const removeLecture = async (req, res) => {
+    try {
+        const { lectureId } = req.params;
+
+        // 1. Find and delete the lecture
+        const lecture = await Lecture.findByIdAndDelete(lectureId);
+        if (!lecture) {
+            return res.status(404).json({
+                message: "Lecture not found!",
+                success: false
+            });
+        }
+
+        // 2. Remove the lecture reference from the associated Course
+        await Course.updateOne(
+            { lectures: lectureId }, 
+            { $pull: { lectures: lectureId } }
+        );
+
+        return res.status(200).json({
+            message: "Lecture removed successfully.",
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Failed to remove lecture"
+        });
+    }
+};
