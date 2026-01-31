@@ -24,7 +24,7 @@ const LectureTab = () => {
   const [btnDisable, setBtnDisable] = useState(false);
 
   // RTK Query Hooks
-  const { data: lectureData, isLoading: isGetLoading } = useGetLectureByIdQuery(lectureId);
+  const { data: lectureData, isLoading: isGetLoading, refetch} = useGetLectureByIdQuery(lectureId);
   const [removeLecture, { isLoading: isRemoving }] = useRemoveLectureMutation();
 
   // Pre-fill data when fetched
@@ -74,6 +74,7 @@ const LectureTab = () => {
       );
 
       if (res.data.success) {
+         await refetch();
         toast.success(res.data.message || "Lecture updated!");
       }
     } catch (error) {
