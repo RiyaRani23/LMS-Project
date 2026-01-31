@@ -1,37 +1,37 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const COURSE_API = "http://localhost:8080/api/v1/course"
+const COURSE_API = "http://localhost:8080/api/v1/course";
 
 export const courseApi = createApi({
   reducerPath: "courseApi",
-  tagTypes:['Refetch_Creator_Course'],
+  tagTypes: ["Refetch_Creator_Course"],
   baseQuery: fetchBaseQuery({
-    baseUrl: COURSE_API, 
-   credentials:"include",
+    baseUrl: COURSE_API,
+    credentials: "include",
   }),
   endpoints: (builder) => ({
     createCourse: builder.mutation({
-      query: ({courseTitle, category}) => ({
+      query: ({ courseTitle, category }) => ({
         url: "/",
         method: "POST",
-        body: {courseTitle, category},
+        body: { courseTitle, category },
       }),
-     providesTags:['Refetch_Creator_Course']
+      providesTags: ["Refetch_Creator_Course"],
     }),
 
     getCreatorCourses: builder.query({
       query: () => "/",
-       providesTags:['Refetch_Creator_Course'],
+      providesTags: ["Refetch_Creator_Course"],
     }),
 
     editCourse: builder.mutation({
-    query: ({ courseId, formData }) => ({
-    url: `/${courseId}`,
-    method: "PUT",
-    body: formData,
-  }),
-  invalidatesTags: ["Course", "Refetch_Creator_Course"],
-}),
+      query: ({ courseId, formData }) => ({
+        url: `/${courseId}`,
+        method: "PUT",
+        body: formData,
+      }),
+      invalidatesTags: ["Course", "Refetch_Creator_Course"],
+    }),
 
     getCourseById: builder.query({
       query: (id) => `/${id}`,
@@ -44,13 +44,13 @@ export const courseApi = createApi({
         method: "POST",
         body: { lectureTitle },
       }),
-      invalidatesTags: ["Lecture"], 
+      invalidatesTags: ["Lecture"],
     }),
 
     getCourseLectures: builder.query({
       query: (courseId) => `/${courseId}/lecture`,
       providesTags: ["Lecture"],
-    }), 
+    }),
 
     getLectureById: builder.query({
       query: (lectureId) => ({
@@ -60,24 +60,23 @@ export const courseApi = createApi({
       providesTags: ["Lecture"],
     }),
 
-    // 2. Update lecture details (Title, Video, Free Preview)
     editLecture: builder.mutation({
       query: ({ courseId, lectureId, formData }) => ({
         url: `/${courseId}/lecture/${lectureId}`,
         method: "PATCH",
-        body: formData, // This handles the Multipart/Form-Data for videos
+        body: formData, 
       }),
       invalidatesTags: ["Lecture"],
     }),
 
     // courseApi.js
-removeLecture: builder.mutation({
-  query: (lectureId) => ({
-    url: `/lecture/${lectureId}`,
-    method: "DELETE",
-  }),
-  invalidatesTags: ["Lecture"], // This refreshes the list automatically
-}),
+    removeLecture: builder.mutation({
+      query: (lectureId) => ({
+        url: `/lecture/${lectureId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Lecture"], // This refreshes the list automatically
+    }),
   }),
 });
 
@@ -86,9 +85,9 @@ export const {
   useGetCreatorCoursesQuery,
   useEditCourseMutation,
   useGetCourseByIdQuery,
-  useCreateLectureMutation, 
+  useCreateLectureMutation,
   useGetCourseLecturesQuery,
-  useEditLectureMutation, 
+  useEditLectureMutation,
   useGetLectureByIdQuery,
-  useRemoveLectureMutation
+  useRemoveLectureMutation,
 } = courseApi;

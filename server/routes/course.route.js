@@ -9,13 +9,14 @@ import {
     createLecture,
     getCourseLectures,
     editLecture, 
-    getLectureById
+    getLectureById,
+    removeLecture
 } from "../controllers/course.controller.js";
 
 const router = express.Router();
 
+// Course Routes
 router.route("/").post(isAuthenticated, createCourse);
-
 router.route("/").get(isAuthenticated, getCreatorCourses);
 
 router.route("/:courseId")
@@ -24,9 +25,13 @@ router.route("/:courseId")
 
 router.route("/:courseId/lecture")
     .post(isAuthenticated, createLecture)
-    .get(isAuthenticated, getCourseLectures);;
+    .get(isAuthenticated, getCourseLectures);
 
-router.route("/lecture/:lectureId").get(isAuthenticated, getLectureById);
-router.route("/:courseId/lecture/:lectureId").patch(isAuthenticated, upload.single("videoFile"), editLecture);
+router.route("/lecture/:lectureId")
+    .get(isAuthenticated, getLectureById)
+    .delete(isAuthenticated, removeLecture); 
+
+router.route("/:courseId/lecture/:lectureId")
+    .patch(isAuthenticated, upload.single("videoFile"), editLecture);
 
 export default router;
