@@ -5,6 +5,7 @@ import userRoute from "./routes/user.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import courseRoute from "./routes/course.route.js";
+import mediaRoute from "./routes/media.route.js"
 
 dotenv.config({});
 
@@ -21,6 +22,8 @@ app.use(cors({
     origin: "http://localhost:5173",
     credentials: true, // Allow cookies to be sent with requests from this
 }));
+
+app.use("/api/v1/media", mediaRoute );
 
 app.use("/api/v1/user", userRoute );
 

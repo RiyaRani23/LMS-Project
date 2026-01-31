@@ -210,17 +210,13 @@ export const editLecture = async (req, res) => {
         const lecture = await Lecture.findById(lectureId);
         if (!lecture) return res.status(404).json({ message: "Lecture not found" });
 
-        // Update basic info
         if (lectureTitle) lecture.lectureTitle = lectureTitle;
         if (isPreviewFree !== undefined) lecture.isPreviewFree = isPreviewFree;
 
-        // Video Handling
         if (videoFile) {
-            // 1. Delete old video from Cloudinary if it exists
             if (lecture.publicId) {
                 await deleteMediaFromCloudinary(lecture.publicId);
             }
-            // 2. Upload new video
             const cloudResponse = await uploadMedia(videoFile.path);
             lecture.videoUrl = cloudResponse.secure_url;
             lecture.publicId = cloudResponse.public_id;
