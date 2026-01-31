@@ -64,7 +64,7 @@ export const courseApi = createApi({
       query: ({ courseId, lectureId, formData }) => ({
         url: `/${courseId}/lecture/${lectureId}`,
         method: "PATCH",
-        body: formData, 
+        body: formData,
       }),
       invalidatesTags: ["Lecture"],
     }),
@@ -75,7 +75,15 @@ export const courseApi = createApi({
         url: `/lecture/${lectureId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Lecture"], // This refreshes the list automatically
+      invalidatesTags: ["Lecture"],
+    }),
+   
+    togglePublishCourse: builder.mutation({
+      query: ({ courseId, query }) => ({
+        url: `/${courseId}?publish=${query}`, 
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Course"],
     }),
   }),
 });
@@ -90,4 +98,5 @@ export const {
   useEditLectureMutation,
   useGetLectureByIdQuery,
   useRemoveLectureMutation,
+  useTogglePublishCourseMutation,
 } = courseApi;

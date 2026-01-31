@@ -300,7 +300,7 @@ export const removeLecture = async (req, res) => {
     // 4. Remove the reference from the Course
     await Course.updateOne(
       { lectures: lectureId },
-      { $pull: { lectures: lectureId } }
+      { $pull: { lectures: lectureId } },
     );
 
     return res.status(200).json({
@@ -312,6 +312,37 @@ export const removeLecture = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to remove lecture",
+    });
+  }
+};
+
+// publish and unpublish course logic
+
+export const togglePublishCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const { publish } = req.query; 
+
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({
+        message: "Course not found!",
+      });
+    }
+
+    // Update the published status
+    course.isPublished = publish === "true";
+    await course.save();
+
+    const statusMessage = course.isPublished ? "Published" : "Unpublished";
+
+    return res.status(200).json({
+      message: `Course ${statusMessage} successfully.`,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Failed to update course status",
     });
   }
 };
