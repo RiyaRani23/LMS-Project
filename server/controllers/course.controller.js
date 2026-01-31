@@ -291,7 +291,7 @@ export const removeLecture = async (req, res) => {
 
     // 2. Delete video from Cloudinary if it exists
     if (lecture.publicId) {
-      await deleteVideoFromCloudinary(lecture.publicId);
+      await deleteMediaFromCloudinary(lecture.publicId);
     }
 
     // 3. Delete the lecture from DB

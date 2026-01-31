@@ -83,9 +83,9 @@ function App() {
   return (
     <main>
      <RouterProvider router={appRouter}/>
-     <Toaster />
+     <Toaster position="top-right" richColors />
     </main>
   )
 }
 
-export default App
+export default App;

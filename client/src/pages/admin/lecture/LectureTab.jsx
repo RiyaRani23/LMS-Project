@@ -8,7 +8,7 @@ import { Loader2, Trash2, Save } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress"; 
 import { useNavigate, useParams } from "react-router-dom";
-import { useEditLectureMutation, useGetLectureByIdQuery, useRemoveLectureMutation } from "@/features/api/courseApi";
+import { useGetLectureByIdQuery, useRemoveLectureMutation } from "@/features/api/courseApi";
 import { toast } from "sonner";
 
 const LectureTab = () => {
@@ -26,7 +26,6 @@ const LectureTab = () => {
   // RTK Query Hooks
   const { data: lectureData, isLoading: isGetLoading } = useGetLectureByIdQuery(lectureId);
   const [removeLecture, { isLoading: isRemoving }] = useRemoveLectureMutation();
-  const [editLecture, {data, isLoading, error, isSuccess}] = useEditLectureMutation();
 
   // Pre-fill data when fetched
   useEffect(() => {
