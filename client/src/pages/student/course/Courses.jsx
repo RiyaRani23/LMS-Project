@@ -3,8 +3,6 @@ import React from "react";
 import Course from "./Course";
 import { useGetPublishedCoursesQuery } from "@/features/api/courseApi";
 
-const courses = [1, 2, 3, 4, 5, 6];
-
 const Courses = () => {
   const { data, isLoading, isError } = useGetPublishedCoursesQuery();
 
