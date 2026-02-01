@@ -16,8 +16,8 @@ import { useGetCreatorCoursesQuery } from "@/features/api/courseApi";
 
 const CourseTable = () => {
   const navigate = useNavigate();
-  
-   const { data, isLoading } = useGetCreatorCoursesQuery();
+
+  const { data, isLoading } = useGetCreatorCoursesQuery();
 
   if (isLoading) {
     return (
@@ -53,7 +53,13 @@ const CourseTable = () => {
                 {course.coursePrice ? `₹${course.coursePrice}` : "Free"}
               </TableCell>
               <TableCell>
-                <Badge variant={course.isPublished ? "success" : "secondary"}>
+                <Badge
+                  className={
+                    course.isPublished
+                      ? "bg-green-600 text-white hover:bg-green-700"
+                      : "bg-blue-500 text-white hover:bg-blue-600" 
+                  }
+                >
                   {course.isPublished ? "Published" : "Draft"}
                 </Badge>
               </TableCell>
@@ -61,8 +67,8 @@ const CourseTable = () => {
                 {course.courseTitle}
               </TableCell>
               <TableCell className="text-right">
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="icon"
                   onClick={() => navigate(`/admin/course/${course._id}`)}
                 >

@@ -12,18 +12,25 @@ import {
   getLectureById,
   removeLecture,
   togglePublishCourse,
+  deleteCourse,
+  getPublishedCourses,
+  getCourseDetailById,
 } from "../controllers/course.controller.js";
 
 const router = express.Router();
 
+router.route("/detail/:courseId").get(getCourseDetailById);
+
 // Course Routes
 router.route("/").post(isAuthenticated, createCourse);
 router.route("/").get(isAuthenticated, getCreatorCourses);
+router.route("/published-courses").get(isAuthenticated, getPublishedCourses);
 
 router
   .route("/:courseId")
   .get(isAuthenticated, getCourseById)
-  .put(isAuthenticated, upload.single("courseThumbnail"), editCourse);
+  .put(isAuthenticated, upload.single("courseThumbnail"), editCourse)
+  .delete(isAuthenticated, deleteCourse);
 
 router
   .route("/:courseId/lecture")

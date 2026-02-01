@@ -1,27 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { 
-  Select, 
-  SelectContent, 
-  SelectGroup, 
-  SelectItem, 
-  SelectLabel, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import RichTextEditor from "@/components/RichTextEditor";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEditCourseMutation, useGetCourseByIdQuery } from "@/features/api/courseApi";
+import {
+  useDeleteCourseMutation,
+  useEditCourseMutation,
+  useGetCourseByIdQuery,
+  useTogglePublishCourseMutation,
+} from "@/features/api/courseApi";
 import { toast } from "sonner";
 
 const CourseTab = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
-  
+  const [togglePublishCourse] = useTogglePublishCourseMutation();
+  const [deleteCourse, { isLoading }] = useDeleteCourseMutation();
+
   const [input, setInput] = useState({
     courseTitle: "",
     subTitle: "",
@@ -35,8 +48,13 @@ const CourseTab = () => {
   const [file, setFile] = useState(null);
 
   // API Hooks
-  const { data: courseData, isSuccess: isGetSuccess, isLoading: isGetLoading } = useGetCourseByIdQuery(courseId);
-  const [editCourse, { isSuccess, isLoading: isEditLoading, error }] = useEditCourseMutation();
+  const {
+    data: courseData,
+    isSuccess: isGetSuccess,
+    isLoading: isGetLoading,
+  } = useGetCourseByIdQuery(courseId);
+  const [editCourse, { isSuccess, isLoading: isEditLoading, error }] =
+    useEditCourseMutation();
 
   // Handle Input Changes
   const changeEventHandler = (e) => {
@@ -45,7 +63,8 @@ const CourseTab = () => {
   };
 
   const selectCategory = (value) => setInput({ ...input, category: value });
-  const selectCourseLevel = (value) => setInput({ ...input, courseLevel: value });
+  const selectCourseLevel = (value) =>
+    setInput({ ...input, courseLevel: value });
 
   const selectThumbnail = (e) => {
     const selectedFile = e.target.files?.[0];
@@ -99,6 +118,39 @@ const CourseTab = () => {
     await editCourse({ courseId, formData });
   };
 
+  const publishStatusHandler = async (action, courseId, refetch) => {
+    try {
+      const response = await togglePublishCourse({
+        courseId,
+        query: action,
+      }).unwrap();
+
+      if (response) {
+       await refetch();
+        toast.success(response.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.data?.message || "Failed to update course status");
+    }
+  };
+
+  const deleteCourseHandler = async () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this course? This cannot be undone.",
+      )
+    ) {
+      try {
+        const res = await deleteCourse(courseId).unwrap();
+        toast.success(res.message);
+        navigate("/admin/course"); 
+      } catch (error) {
+        toast.error(error.data?.message || "Failed to delete course");
+      }
+    }
+  };
+
   // Loading state for initial data fetch
   if (isGetLoading) {
     return (
@@ -119,13 +171,28 @@ const CourseTab = () => {
           </CardDescription>
         </div>
         <div className="space-x-2">
-          <Button variant="outline">
+          <Button
+          disabled={ courseData?.course.lectures.length === 0}
+            variant="outline"
+            onClick={() =>
+              publishStatusHandler(
+                courseData?.course?.isPublished ? "false" : "true",
+                courseId,
+              )
+            }
+          >
             {courseData?.course?.isPublished ? "Unpublish" : "Publish"}
           </Button>
-          <Button variant="destructive">Remove Course</Button>
+          <Button
+            variant="destructive"
+            onClick={deleteCourseHandler}
+            disabled={isLoading}
+          >
+            {isLoading ? "Deleting..." : "Remove Course"}
+          </Button>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         <div className="space-y-1">
           <Label>Title</Label>
@@ -165,8 +232,12 @@ const CourseTab = () => {
                 <SelectGroup>
                   <SelectItem value="Next JS">Next JS</SelectItem>
                   <SelectItem value="Data Science">Data Science</SelectItem>
-                  <SelectItem value="Frontend Development">Frontend Development</SelectItem>
-                  <SelectItem value="Fullstack Development">Fullstack Development</SelectItem>
+                  <SelectItem value="Frontend Development">
+                    Frontend Development
+                  </SelectItem>
+                  <SelectItem value="Fullstack Development">
+                    Fullstack Development
+                  </SelectItem>
                   <SelectItem value="MERN Stack">MERN Stack</SelectItem>
                 </SelectGroup>
               </SelectContent>
@@ -203,18 +274,18 @@ const CourseTab = () => {
 
         <div className="space-y-2">
           <Label>Course Thumbnail</Label>
-          <Input 
-            type="file" 
-            accept="image/*" 
-            onChange={selectThumbnail} 
-            className="w-fit cursor-pointer" 
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={selectThumbnail}
+            className="w-fit cursor-pointer"
           />
           {previewThumbnail && (
             <div className="mt-2">
-              <img 
-                src={previewThumbnail} 
-                alt="Course Preview" 
-                className="w-64 rounded-md border" 
+              <img
+                src={previewThumbnail}
+                alt="Course Preview"
+                className="w-64 rounded-md border"
               />
             </div>
           )}

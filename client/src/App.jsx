@@ -4,7 +4,7 @@ import Login from './pages/login.jsx'
 import HeroSection from './pages/student/HeroSection'
 import MainLayout from './Layout/MainLayout'
 import { RouterProvider } from 'react-router'
-import Courses from './pages/student/Courses'
+import Courses from './pages/student/course/Courses'
 import MyLearning from './pages/student/MyLearning'
 import Profile from './pages/student/Profile/Profile'
 import CourseTable from './pages/admin/course/CourseTable'
@@ -15,6 +15,7 @@ import EditCourse from './pages/admin/course/EditCourse'
 import CreateLecture from './pages/admin/lecture/CreateLecture'
 import EditLecture from './pages/admin/lecture/EditLecture'
 import { Toaster } from "@/components/ui/sonner";
+import CourseDetail from './pages/student/course/CourseDetail'
 
 const appRouter = createBrowserRouter([
   {
@@ -40,6 +41,11 @@ const appRouter = createBrowserRouter([
       {
         path:"profile",
         element:<Profile/>
+      },
+
+       {
+        path:"/course-detail/:courseId",
+        element:<CourseDetail />
       },
       
       {

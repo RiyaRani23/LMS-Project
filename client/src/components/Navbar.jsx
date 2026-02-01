@@ -37,12 +37,12 @@ import { toast } from "sonner";
 import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const {user} = useSelector(store=>store.auth);
+  const { user } = useSelector((store) => store.auth);
   const navigate = useNavigate();
   const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
 
   const logoutHandler = async () => {
-    await logoutUser(); 
+    await logoutUser();
   };
 
   useEffect(() => {
@@ -58,27 +58,29 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto hidden md:flex items-center justify-between gap-10 h-full ">
         <div className="flex items-center space-x-2">
           <School size={"30"} />
-          <h1 className="hidden md:block font-extrabold text-2xl">
-            E-Learning
-          </h1>
+          <Link to="/">
+            <h1 className="hidden md:block font-extrabold text-2xl">
+              E-Learning
+            </h1>
+          </Link>
         </div>
         {/* User icons and dark mode icon */}
         <div className="flex items-center space-x-4">
           {user ? (
             <DropdownMenu>
-             <DropdownMenuTrigger asChild>
-  <div className="outline-none"> 
-    <Avatar className="w-10 h-10 cursor-pointer">
-      <AvatarImage
-        src={user?.photoUrl || "https://github.com/shadcn.png"}
-        className="rounded-full"
-      />
-      <AvatarFallback className="rounded-full bg-linear-to-tr from-indigo-500 to-purple-600 text-white">
-        AK
-      </AvatarFallback>
-    </Avatar>
-  </div>
-</DropdownMenuTrigger>
+              <DropdownMenuTrigger asChild>
+                <div className="outline-none">
+                  <Avatar className="w-10 h-10 cursor-pointer">
+                    <AvatarImage
+                      src={user?.photoUrl || "https://github.com/shadcn.png"}
+                      className="rounded-full"
+                    />
+                    <AvatarFallback className="rounded-full bg-linear-to-tr from-indigo-500 to-purple-600 text-white">
+                      AK
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+              </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-48 rounded-xl shadow-xl border bg-background p-2"
                 align="end"
@@ -90,16 +92,17 @@ const Navbar = () => {
                 <DropdownMenuSeparator />
 
                 <DropdownMenuGroup>
-                {user.role === "instructor" && (
-                   <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
-                    <LayoutDashboard size={16} />
-                    Dashboard
-                  </DropdownMenuItem>
-                )}
-                  
+                  {user.role === "instructor" && (
+                    <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer">
+                      <LayoutDashboard size={16} />
+                      Dashboard
+                    </DropdownMenuItem>
+                  )}
 
-                  <DropdownMenuItem className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer"
-                  onClick={() => navigate("/my-learning")}>
+                  <DropdownMenuItem
+                    className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer"
+                    onClick={() => navigate("/my-learning")}
+                  >
                     <User size={16} />
                     <span>My Learning</span>
                   </DropdownMenuItem>
@@ -113,7 +116,10 @@ const Navbar = () => {
                 <DropdownMenuSeparator />
 
                 {/* Logout remains at the bottom for safety */}
-                <DropdownMenuItem onClick={logoutHandler} className="flex items-center gap-2 rounded-lg px-3 py-2 text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer">
+                <DropdownMenuItem
+                  onClick={logoutHandler}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer"
+                >
                   <LogOut size={16} />
                   Log out
                 </DropdownMenuItem>
@@ -147,11 +153,11 @@ const MobileNavbar = ({ user, logoutHandler }) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <span> 
-    <Button size="icon" variant="outline" className="rounded-full">
-      <MenuIcon />
-    </Button>
-  </span>
+        <span>
+          <Button size="icon" variant="outline" className="rounded-full">
+            <MenuIcon />
+          </Button>
+        </span>
       </SheetTrigger>
 
       <SheetContent className="flex flex-col">
@@ -164,22 +170,22 @@ const MobileNavbar = ({ user, logoutHandler }) => {
         {user ? (
           <>
             <nav className="flex flex-col gap-4">
-              <div 
-                onClick={() => navigate("/my-learning")} 
+              <div
+                onClick={() => navigate("/my-learning")}
                 className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer"
               >
                 <User size={16} />
                 <span>My Learning</span>
               </div>
-              <div 
-                onClick={() => navigate("/profile")} 
+              <div
+                onClick={() => navigate("/profile")}
                 className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted cursor-pointer"
               >
                 <Settings size={16} />
                 <span>Edit Profile</span>
               </div>
-              <div 
-                onClick={logoutHandler} 
+              <div
+                onClick={logoutHandler}
                 className="flex items-center gap-2 rounded-lg px-3 py-2 text-red-600 hover:bg-red-50 cursor-pointer"
               >
                 <LogOut size={16} />
@@ -188,7 +194,10 @@ const MobileNavbar = ({ user, logoutHandler }) => {
             </nav>
             {user.role === "instructor" && (
               <SheetFooter className="mt-4">
-                <Button onClick={() => navigate("/admin/dashboard")} className="w-full">
+                <Button
+                  onClick={() => navigate("/admin/dashboard")}
+                  className="w-full"
+                >
                   Dashboard
                 </Button>
               </SheetFooter>
@@ -196,8 +205,10 @@ const MobileNavbar = ({ user, logoutHandler }) => {
           </>
         ) : (
           <div className="flex flex-col gap-4">
-             <Button variant="outline" onClick={() => navigate("/login")}>Login</Button>
-             <Button onClick={() => navigate("/login")}>Sign Up</Button>
+            <Button variant="outline" onClick={() => navigate("/login")}>
+              Login
+            </Button>
+            <Button onClick={() => navigate("/login")}>Sign Up</Button>
           </div>
         )}
       </SheetContent>

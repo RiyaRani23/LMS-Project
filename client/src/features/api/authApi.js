@@ -18,7 +18,7 @@ export const authApi = createApi({
         body: inputData,
       }),
     }),
-     loginUser: builder.mutation({
+    loginUser: builder.mutation({
       query: (credentials) => ({
         url: "/login",
         method: "POST",
@@ -27,18 +27,16 @@ export const authApi = createApi({
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const result = await queryFulfilled;
-          dispatch(
-            userLoggedIn({ user: result.data.user })
-          );
+          dispatch(userLoggedIn({ user: result.data.user }));
         } catch (error) {
           console.error("Login failed: ", error);
         }
-        },
+      },
     }),
     logoutUser: builder.mutation({
       query: () => ({
         url: "/logout",
-        method: "GET", 
+        method: "GET",
       }),
       async onQueryStarted(_, { dispatch }) {
         try {
@@ -46,36 +44,37 @@ export const authApi = createApi({
         } catch (error) {
           console.error(error);
         }
-        },
+      },
     }),
-
     loadUser: builder.query({
-      query:() => ({
-        url:"profile",
-        method:"GET"
+      query: () => ({
+        url: "profile",
+        method: "GET",
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const result = await queryFulfilled;
-          dispatch(
-            userLoggedIn({ user: result.data.user })
-          );
+          dispatch(userLoggedIn({ user: result.data.user }));
         } catch (error) {
           console.error("Login failed: ", error);
         }
-        },
+      },
     }),
     updateUser: builder.mutation({
       query: (formData) => ({
         url: "/profile/update",
         method: "PUT",
         body: formData,
-        credentials: "include"
-      }), 
+        credentials: "include",
+      }),
     }),
   }),
-  });
-   
-export const { useLoginUserMutation, useRegisterUserMutation, useLoadUserQuery, useUpdateUserMutation,
-  useLogoutUserMutation
- } = authApi;
+});
+
+export const {
+  useLoginUserMutation,
+  useRegisterUserMutation,
+  useLoadUserQuery,
+  useUpdateUserMutation,
+  useLogoutUserMutation,
+} = authApi;

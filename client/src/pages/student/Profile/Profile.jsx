@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import EditProfileDialog from "./EditProfileDialog";
-import Course from "../Course";
+import Course from "../course/Course";
 import ProfileSkeleton from "./ProfileSkeleton";
 import { useLoadUserQuery } from "@/features/api/authApi";
 import { BookOpen } from "lucide-react";

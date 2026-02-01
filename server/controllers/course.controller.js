@@ -2,6 +2,35 @@ import { Course } from "../models/course.model.js";
 import { uploadMedia, deleteMediaFromCloudinary } from "../utils/cloudinary.js";
 import { Lecture } from "../models/lecture.model.js";
 
+export const getCourseDetailById = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    // We populate 'lectures' to show the curriculum and 'creator' to show the instructor
+    const course = await Course.findById(courseId)
+      .populate({ path: "lectures" })
+      .populate({ path: "creator", select: "name photoUrl" });
+
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: "Course not found!",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      course,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get course details",
+    });
+  }
+};
+
 export const createCourse = async (req, res) => {
   try {
     const { courseTitle, category } = req.body;
@@ -206,6 +235,35 @@ export const getCourseLectures = async (req, res) => {
   }
 };
 
+export const deleteCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    const course = await Course.findById(courseId);
+    if (!course) return res.status(404).json({ message: "Course not found!" });
+
+    // 1. Delete thumbnail from Cloudinary
+    if (course.courseThumbnail) {
+      const publicId = course.courseThumbnail.split("/").pop().split(".")[0];
+      await deleteMediaFromCloudinary(publicId);
+    }
+
+    // 2. Delete all associated lectures from the database
+    await Lecture.deleteMany({ _id: { $in: course.lectures } });
+
+    // 3. Delete the course
+    await Course.findByIdAndDelete(courseId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Course and associated lectures deleted successfully.",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Failed to delete course" });
+  }
+};
+
 export const editLecture = async (req, res) => {
   try {
     const { courseId } = req.params;
@@ -316,12 +374,37 @@ export const removeLecture = async (req, res) => {
   }
 };
 
-// publish and unpublish course logic
+export const getPublishedCourses = async (req, res) => {
+  try {
+    const courses = await Course.find({ isPublished: true })
+      .populate({ path: "creator", select: "name photoUrl" })
+      .sort({ createdAt: -1 });
 
+    if (!courses || courses.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No published courses found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      courses,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch published courses",
+    });
+  }
+};
+
+// publish and unpublish course logic
 export const togglePublishCourse = async (req, res) => {
   try {
     const { courseId } = req.params;
-    const { publish } = req.query; 
+    const { publish } = req.query;
 
     const course = await Course.findById(courseId);
     if (!course) {

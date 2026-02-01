@@ -19,6 +19,14 @@ export const courseApi = createApi({
       providesTags: ["Refetch_Creator_Course"],
     }),
 
+    getPublishedCourses: builder.query({
+      query: () => ({
+        url: "/published-courses",
+        method: "GET",
+      }),
+      providesTags: ["Course"],
+    }),
+
     getCreatorCourses: builder.query({
       query: () => "/",
       providesTags: ["Refetch_Creator_Course"],
@@ -52,6 +60,14 @@ export const courseApi = createApi({
       providesTags: ["Lecture"],
     }),
 
+    deleteCourse: builder.mutation({
+      query: (courseId) => ({
+        url: `/${courseId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Course"],
+    }),
+
     getLectureById: builder.query({
       query: (lectureId) => ({
         url: `/lecture/${lectureId}`,
@@ -69,7 +85,6 @@ export const courseApi = createApi({
       invalidatesTags: ["Lecture"],
     }),
 
-    // courseApi.js
     removeLecture: builder.mutation({
       query: (lectureId) => ({
         url: `/lecture/${lectureId}`,
@@ -77,13 +92,23 @@ export const courseApi = createApi({
       }),
       invalidatesTags: ["Lecture"],
     }),
-   
+
     togglePublishCourse: builder.mutation({
       query: ({ courseId, query }) => ({
-        url: `/${courseId}?publish=${query}`, 
+        url: `/${courseId}?publish=${query}`,
         method: "PATCH",
       }),
       invalidatesTags: ["Course"],
+    }),
+
+    getCourseDetailById: builder.query({
+      query: (courseId) => ({
+        url: `/detail/${courseId}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, courseId) => [
+        { type: "Course", id: courseId },
+      ],
     }),
   }),
 });
@@ -99,4 +124,7 @@ export const {
   useGetLectureByIdQuery,
   useRemoveLectureMutation,
   useTogglePublishCourseMutation,
+  useDeleteCourseMutation,
+  useGetPublishedCoursesQuery,
+  useGetCourseDetailByIdQuery,
 } = courseApi;

@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 const MyLearning = () => {
   // Replace with actual data fetching logic 
-  const isLoading = true;
+  const isLoading = false;
   const MyLearningCourses = []; 
 
   return (
