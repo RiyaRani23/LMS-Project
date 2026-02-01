@@ -3,16 +3,15 @@ import { Navigate, useParams } from "react-router-dom";
 import { useGetCourseByIdQuery } from "@/features/api/courseApi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PlayCircle, Lock, BookOpen, Clock } from "lucide-react";
-import { useLoadUserQuery } from "@/features/api/authApi";
+import BuyCourseButton from "@/components/BuyCourseButton";
 
 const CourseDetail = () => {
   const { courseId } = useParams();
   const { data, isLoading, isError } = useGetCourseByIdQuery(courseId);
-  const { data: userData } = useLoadUserQuery();
-  const user = userData?.user;
+  const purchaseCourse = true;
 
   if (isLoading)
     return <p className="text-center py-10">Loading course details...</p>;
@@ -23,33 +22,10 @@ const CourseDetail = () => {
 
   const { course } = data;
 
-  const isEnrolled = course.enrolledStudents?.some(
-    (studentId) => studentId === user?._id,
-  );
-
-  const handlePurchase = async () => {
-  try {
-    // For now, we just log it. Later, you will call your 'createCheckoutSession' mutation here.
-    console.log("Initiating purchase for course:", courseId);
-    
-    // Example: toast.info("Redirecting to payment gateway...");
-  } catch (error) {
-    console.error("Purchase error:", error);
-  }
-};
-
-  const handleAction = () => {
-    if (isEnrolled) {
-      Navigate(`/course-progress/${courseId}`); 
-    } else {
-      handlePurchase(); 
-    }
-  };
-
   return (
     <div className="space-y-10 mt-3 px-4 md:px-0 max-w-7xl mx-auto">
       {/* Hero Section */}
-      <div className="bg-gray-700 text-white p-8 rounded-2xl flex flex-col md:flex-row gap-8 items-center shadow-xl">
+      <div className="bg-gray-800 w-full text-white p-8 rounded-2xl flex flex-col md:flex-row gap-8 items-center shadow-xl">
         <div className="flex-1 space-y-4">
           <h1 className="text-3xl md:text-4xl font-extrabold">
             {course.courseTitle}
@@ -89,17 +65,16 @@ const CourseDetail = () => {
           <CardContent className="p-2 space-y-2">
             <h1 className="text-emerald-600 ">{course.courseTitle}</h1>
             <Separator className="my-2" />
-            <div className="text-3xl font-bold">₹{course.coursePrice}</div>
-            <Button
-              onClick={handleAction}
-              className={`w-full ${isEnrolled ? "bg-gray-800 hover:bg-gray-900" : "bg-blue-600 hover:bg-blue-700"}`}
-            >
-              {isEnrolled ? "Continue Learning" : "Buy Now"}
-            </Button>
-            <p className="text-xs text-center text-gray-500">
-              30-Day Money-Back Guarantee
-            </p>
+            <div className="text-2xl font-bold text-zinc-600">₹{course.coursePrice}</div>
           </CardContent>
+          <CardFooter className="flex justify-center p-4">
+            {purchaseCourse ? (
+                <Button classNmae="w-full">Continue Course</Button>
+            ) : (
+                <BuyCourseButton/>
+            )}
+
+          </CardFooter>
         </Card>
       </div>
 

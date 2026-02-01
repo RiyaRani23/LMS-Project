@@ -6,7 +6,6 @@ export const getCourseDetailById = async (req, res) => {
   try {
     const { courseId } = req.params;
 
-    // We populate 'lectures' to show the curriculum and 'creator' to show the instructor
     const course = await Course.findById(courseId)
       .populate({ path: "lectures" })
       .populate({ path: "creator", select: "name photoUrl" });
