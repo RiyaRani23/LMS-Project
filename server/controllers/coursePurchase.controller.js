@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { Course } from "../models/course.model.js";
 import { CoursePurchase } from "../models/coursePurchase.model.js";
+import { Lecture } from "../models/lecture.model.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -13,7 +14,7 @@ export const createCheckoutSession = async (req, res) => {
     if (!course) {
       return res.status(404).json({
         success: false,
-        message: "Course not found!"
+        message: "Course not found!",
       });
     }
 
@@ -34,8 +35,8 @@ export const createCheckoutSession = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.FRONTEND_URL}/course-progress/${courseId}`, 
-      cancel_url: `${process.env.FRONTEND_URL}/course-detail/${courseId}`,    
+      success_url: `${process.env.FRONTEND_URL}/course-progress/${courseId}`,
+      cancel_url: `${process.env.FRONTEND_URL}/course-detail/${courseId}`,
       metadata: {
         courseId,
         userId,
@@ -67,50 +68,92 @@ export const createCheckoutSession = async (req, res) => {
 };
 
 export const stripeWebhook = async (req, res) => {
-    let event;
+  let event;
+
+  try {
+    const signature = req.headers["stripe-signature"];
+
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET,
+    );
+  } catch (error) {
+    console.error(`Webhook Error: ${error.message}`);
+    return res.status(400).send(`Webhook Error: ${error.message}`);
+  }
+
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+    const { courseId, userId } = session.metadata;
 
     try {
-        const signature = req.headers["stripe-signature"];
+      await Purchase.findOneAndUpdate(
+        { paymentId: session.id },
+        { status: "completed" },
+        { new: true },
+      );
 
-        event = stripe.webhooks.constructEvent(
-            req.body,
-            signature,
-            process.env.STRIPE_WEBHOOK_SECRET
+      const updatedCourse = await Course.findByIdAndUpdate(
+        courseId,
+        { $addToSet: { enrolledStudents: userId } },
+        { new: true },
+      );
+
+      if (updatedCourse && updatedCourse.lectures.length > 0) {
+        await Lecture.updateMany(
+          { _id: { $in: updatedCourse.lectures } },
+          { $set: { isPreviewFree: true } },
         );
-    } catch (error) {
-        console.error(`Payload Error: ${error.message}`);
-        return res.status(400).send(`Webhook Error: ${error.message}`);
+      }
+
+      console.log(
+        `Payment Success: Course ${courseId} is now fully unlocked for User ${userId}`,
+      );
+    } catch (dbError) {
+      console.error("Database Error during Webhook:", dbError);
+      return res.status(500).json({ message: "Internal Server Error" });
     }
+  }
 
-    // Process the payload based on the event type
-    if (event.type === "checkout.session.completed") {
-        const session = event.data.object; // This is your main payload object
-
-        // Extracting data from the payload metadata
-        const { courseId, userId } = session.metadata;
-
-        try {
-            // 1. Update the Purchase record using the session payload data
-            await Purchase.findOneAndUpdate(
-                { paymentId: session.id },
-                { status: "completed" },
-                { new: true }
-            );
-
-            // 2. Add student to course enrollment list
-            // Using $addToSet prevents duplicate enrollments if the payload is sent twice
-            await Course.findByIdAndUpdate(
-                courseId,
-                { $addToSet: { enrolledStudents: userId } },
-                { new: true }
-            );
-
-            console.log(`Payload processed: Course ${courseId} unlocked for User ${userId}`);
-        } catch (dbError) {
-            console.error("Database update failed for payload:", dbError);
-            return res.status(500).json({ message: "Failed to update enrollment" });
-        }
-    }
-    res.status(200).send();
+  res.status(200).send();
 };
 
+export const getCourseStatus = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const userId = req.id;
+
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ message: "Course not found" });
+        }
+
+        const isEnrolled = course.enrolledStudents.includes(userId);
+
+        return res.status(200).json({ enrolled: isEnrolled });
+    } catch (error) {
+        console.error("Status Error:", error);
+        res.status(500).json({ message: "Error fetching status" });
+    }
+};
+
+export const getAllPurchasedCourses = async (req, res) => {
+    try {
+        const userId = req.id;
+        
+        // Find completed purchases and populate the course details
+        const purchased = await CoursePurchase.find({ 
+            userId, 
+            status: 'completed' 
+        }).populate('courseId');
+
+        return res.status(200).json({
+            success: true,
+            purchasedCourses: purchased.map(p => p.courseId)
+        });
+    } catch (error) {
+        console.error("Fetch Error:", error);
+        res.status(500).json({ message: "Error fetching purchased courses" });
+    }
+};

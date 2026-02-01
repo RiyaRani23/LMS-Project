@@ -1,20 +1,19 @@
-import React from 'react';
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { useCreateCheckoutSessionMutation } from "@/features/api/purchaseApi"; 
+import { useCreateCheckoutSessionMutation } from "@/features/api/purchaseApi";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 const BuyCourseButton = ({ courseId, isEnrolled }) => {
   const navigate = useNavigate();
-  const [createCheckoutSession, { isLoading, isSuccess, isError, data }] = useCreateCheckoutSessionMutation();
+  const [createCheckoutSession, { isLoading }] =
+    useCreateCheckoutSessionMutation();
 
-  const handleAction = async () => {
+  const handleAction = async (courseId) => {
     if (isEnrolled) {
-      // Navigate to the course progress/player page
       navigate(`/course-progress/${courseId}`);
     } else {
-      // Trigger Stripe/Payment logic
       try {
         const response = await createCheckoutSession(courseId).unwrap();
         if (response.url) {
