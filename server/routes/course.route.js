@@ -36,6 +36,7 @@ router
   .route("/:courseId/lecture")
   .post(isAuthenticated, createLecture)
   .get(isAuthenticated, getCourseLectures);
+  
 
 router
   .route("/lecture/:lectureId")
