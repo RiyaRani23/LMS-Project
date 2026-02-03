@@ -23,11 +23,6 @@ export const purchaseApi = createApi({
       }),
     }),
 
-    getCourseProgress: builder.query({
-      query: (courseId) => `/course-progress/${courseId}`,
-      providesTags: ["CourseProgress"],
-    }),
-
     getCourseDetailWithPurchaseStatus: builder.query({
       query: (courseId) => `/course-detail/${courseId}`,
       providesTags: (result, error, courseId) => [
@@ -39,20 +34,11 @@ export const purchaseApi = createApi({
       query: () => "/",
     }),
 
-    updateLectureProgress: builder.mutation({
-      query: ({ courseId, lectureId }) => ({
-        url: `/course-progress/${courseId}/lecture/${lectureId}/view`,
-        method: "POST",
-      }),
-      invalidatesTags: ["CourseProgress"],
-    }),
   }),
 });
 
 export const {
   useCreateCheckoutSessionMutation,
   useGetAllPurchasedCoursesQuery,
-  useGetCourseProgressQuery,
   useGetCourseDetailWithPurchaseStatusQuery,
-  useUpdateLectureProgressMutation,
 } = purchaseApi;
