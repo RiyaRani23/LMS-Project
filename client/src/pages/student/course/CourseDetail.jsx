@@ -1,46 +1,45 @@
 import React from "react";
-import { Navigate, useParams } from "react-router-dom";
-import { useGetCourseByIdQuery } from "@/features/api/courseApi";
+import { useParams, useNavigate } from "react-router-dom"; // Added useNavigate
+import { useGetCourseDetailWithPurchaseStatusQuery } from "@/features/api/purchaseApi"; // Correct hook
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PlayCircle, Lock, BookOpen, Clock } from "lucide-react";
 import BuyCourseButton from "@/components/BuyCourseButton";
 
 const CourseDetail = () => {
   const { courseId } = useParams();
-  const { data, isLoading, isError } = useGetCourseByIdQuery(courseId);
-  const purchaseCourse = false;
+  const navigate = useNavigate();
 
-  if (isLoading)
-    return <p className="text-center py-10">Loading course details...</p>;
-  if (isError)
+  // 1. Use the combined query hook
+  const { data, isLoading, isError } = useGetCourseDetailWithPurchaseStatusQuery(courseId);
+
+  if (isLoading) return <p className="text-center py-10 font-medium">Loading course details...</p>;
+  
+  if (isError || !data)
     return (
-      <p className="text-center py-10 text-red-500">Error loading course.</p>
+      <p className="text-center py-10 text-red-500 font-medium">
+        Error loading course. Please try again later.
+      </p>
     );
 
-  const { course } = data;
+  // 2. Destructure data from the combined response
+  const { course, purchased } = data;
 
   return (
     <div className="space-y-10 mt-3 px-4 md:px-0 max-w-7xl mx-auto">
       {/* Hero Section */}
       <div className="bg-gray-800 w-full text-white p-8 rounded-2xl flex flex-col md:flex-row gap-8 items-center shadow-xl">
         <div className="flex-1 space-y-4">
-          <h1 className="text-3xl md:text-4xl font-extrabold">
-            {course.courseTitle}
-          </h1>
+          <h1 className="text-3xl md:text-4xl font-extrabold">{course.courseTitle}</h1>
           <p className="text-gray-400 text-lg">
-            {course.subTitle ||
-              "Master this course from scratch with real-world projects."}
+            {course.subTitle || "Master this course from scratch with real-world projects."}
           </p>
           <div className="flex items-center gap-3">
-            <Badge className="bg-blue-600">{course.courseLevel}</Badge>
+            <Badge className="bg-blue-600 uppercase text-[10px]">{course.courseLevel}</Badge>
             <span className="text-sm text-gray-300">
-              Created by{" "}
-              <span className="text-blue-400 font-bold">
-                {course.creator?.name}
-              </span>
+              Created by <span className="text-blue-400 font-bold">{course.creator?.name}</span>
             </span>
           </div>
           <div className="flex items-center gap-4 text-sm text-gray-400">
@@ -48,11 +47,10 @@ const CourseDetail = () => {
               <BookOpen size={16} /> {course.lectures?.length} Lectures
             </div>
             <div className="flex items-center gap-1">
-              <Clock size={16} /> Last updated{" "}
-              {new Date(course.updatedAt).toLocaleDateString()}
+              <Clock size={16} /> Last updated {new Date(course.updatedAt).toLocaleDateString()}
             </div>
           </div>
-          <p>Student enrolled: 10</p>
+          <p className="text-sm">Students enrolled: {course.enrolledStudents?.length || 0}</p>
         </div>
 
         {/* Purchase Card */}
@@ -62,39 +60,39 @@ const CourseDetail = () => {
             alt="thumbnail"
             className="w-full h-44 object-cover"
           />
-          <CardContent className="p-2 space-y-2">
-            <h1 className="text-emerald-600 ">{course.courseTitle}</h1>
+          <CardContent className="p-5 space-y-2">
+            <h1 className="text-emerald-600 font-bold line-clamp-1">{course.courseTitle}</h1>
             <Separator className="my-2" />
             <div className="text-2xl font-bold text-zinc-600">₹{course.coursePrice}</div>
           </CardContent>
-          <CardFooter className="flex justify-center p-4">
-            {purchaseCourse ? (
-                <Button classNmae="w-full">Continue Course</Button>
+          <CardFooter className="flex justify-center p-4 pt-0">
+            {/* 3. Conditional rendering based on 'purchased' flag */}
+            {purchased ? (
+              <Button 
+                onClick={() => navigate(`/course-progress/${courseId}`)} 
+                className="w-full bg-emerald-600 hover:bg-emerald-700"
+              >
+                Continue Course
+              </Button>
             ) : (
-                <BuyCourseButton courseId={courseId}/>
+              <BuyCourseButton courseId={courseId} />
             )}
-
           </CardFooter>
         </Card>
       </div>
 
       {/* Course Content & Description */}
       <div className="flex flex-col lg:flex-row gap-10">
-        <div className="flex-1 space-y-12">
-          {" "}
-          <section className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              About this course
-            </h2>
+        <div className="flex-1 space-y-12 pb-20">
+          <section>
+            <h2 className="text-2xl font-bold mb-4">About this course</h2>
             <div
-              className="prose prose-zinc dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed tracking-tight"
-              dangerouslySetInnerHTML={{
-                __html: course.description || "No description provided.",
-              }}
+              className="prose prose-zinc max-w-none text-gray-700 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: course.description || "No description provided." }}
             />
           </section>
-          {/* Course Content Section */}
-          <section className="animate-in fade-in slide-in-from-bottom-6 duration-700">
+
+          <section>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold">Course Content</h2>
               <span className="text-sm text-gray-500 font-medium">
@@ -102,38 +100,32 @@ const CourseDetail = () => {
               </span>
             </div>
 
-            <div className="border border-gray-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm">
+            <div className="border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
               {course.lectures?.map((lecture, index) => (
                 <div
                   key={lecture._id}
-                  className="group flex items-center justify-between p-5 border-b last:border-none bg-white dark:bg-zinc-950 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-all duration-200"
+                  className="group flex items-center justify-between p-5 border-b last:border-none bg-white hover:bg-zinc-50 transition-all duration-200"
                 >
                   <div className="flex items-center gap-4">
                     <span className="text-zinc-400 text-sm font-mono w-4">
                       {(index + 1).toString().padStart(2, "0")}
                     </span>
-                    <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg group-hover:scale-110 transition-transform">
-                      <PlayCircle
-                        size={20}
-                        className="text-blue-600 dark:text-blue-400"
-                      />
+                    <div className="p-2 bg-blue-50 rounded-lg">
+                      <PlayCircle size={20} className="text-blue-600" />
                     </div>
-                    <span className="font-semibold text-zinc-800 dark:text-zinc-200 group-hover:text-blue-600 transition-colors">
-                      {lecture.lectureTitle}
-                    </span>
+                    <span className="font-semibold text-zinc-800">{lecture.lectureTitle}</span>
                   </div>
 
                   <div className="flex items-center">
-                    {lecture.isPreviewFree ? (
-                      <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider">
-                        Free Preview
+                    {/* Show unlocked icon if purchased, otherwise show preview/lock status */}
+                    {purchased || lecture.isPreviewFree ? (
+                      <Badge className="bg-emerald-100 text-emerald-700 border-none">
+                        {purchased ? "Available" : "Free Preview"}
                       </Badge>
                     ) : (
                       <div className="flex items-center gap-1 text-zinc-400">
                         <Lock size={16} />
-                        <span className="text-[10px] font-bold uppercase tracking-widest">
-                          Locked
-                        </span>
+                        <span className="text-[10px] font-bold uppercase">Locked</span>
                       </div>
                     )}
                   </div>

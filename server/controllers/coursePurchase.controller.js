@@ -88,7 +88,7 @@ export const stripeWebhook = async (req, res) => {
     const { courseId, userId } = session.metadata;
 
     try {
-      await Purchase.findOneAndUpdate(
+        const purchase = await CoursePurchase.findOneAndUpdate(
         { paymentId: session.id },
         { status: "completed" },
         { new: true },
@@ -119,22 +119,30 @@ export const stripeWebhook = async (req, res) => {
   res.status(200).send();
 };
 
-export const getCourseStatus = async (req, res) => {
+export const getCourseDetailWithPurchaseStatus = async (req, res) => {
   try {
     const { courseId } = req.params;
-    const userId = req.id;
+    const userId = req.id; 
 
-    const course = await Course.findById(courseId);
+    const course = await Course.findById(courseId).populate({
+      path: "lectures",
+      select: "lectureTitle duration isPreviewFree"
+    });
+
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
 
-    const isEnrolled = course.enrolledStudents.includes(userId);
+    const purchased = course.enrolledStudents.includes(userId);
 
-    return res.status(200).json({ enrolled: isEnrolled });
+    return res.status(200).json({
+      success: true,
+      course,
+      purchased 
+    });
   } catch (error) {
-    console.error("Status Error:", error);
-    res.status(500).json({ message: "Error fetching status" });
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -142,7 +150,6 @@ export const getAllPurchasedCourses = async (req, res) => {
   try {
     const userId = req.id;
 
-    // Find completed purchases and populate the course details
     const purchased = await CoursePurchase.find({
       userId,
       status: "completed",
@@ -155,5 +162,33 @@ export const getAllPurchasedCourses = async (req, res) => {
   } catch (error) {
     console.error("Fetch Error:", error);
     res.status(500).json({ message: "Error fetching purchased courses" });
+  }
+};
+
+export const getCourseProgress = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const userId = req.id; // From isAuthenticated middleware
+
+    const course = await Course.findById(courseId).populate("lectures");
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    const isEnrolled = course.enrolledStudents.includes(userId);
+    if (!isEnrolled) {
+      return res.status(403).json({ 
+        success: false, 
+        message: "You are not enrolled in this course." 
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      course,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
