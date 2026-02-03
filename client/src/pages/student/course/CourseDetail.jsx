@@ -11,7 +11,7 @@ import BuyCourseButton from "@/components/BuyCourseButton";
 const CourseDetail = () => {
   const { courseId } = useParams();
   const { data, isLoading, isError } = useGetCourseByIdQuery(courseId);
-  const purchaseCourse = true;
+  const purchaseCourse = false;
 
   if (isLoading)
     return <p className="text-center py-10">Loading course details...</p>;
@@ -82,8 +82,6 @@ const CourseDetail = () => {
       <div className="flex flex-col lg:flex-row gap-10">
         <div className="flex-1 space-y-12">
           {" "}
-          {/* Increased vertical spacing between sections */}
-          {/* Description Section */}
           <section className="animate-in fade-in slide-in-from-bottom-4 duration-700">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
               About this course

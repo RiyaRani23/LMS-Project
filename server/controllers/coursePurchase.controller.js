@@ -35,8 +35,8 @@ export const createCheckoutSession = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.FRONTEND_URL}/course-progress/${courseId}`,
-      cancel_url: `${process.env.FRONTEND_URL}/course-detail/${courseId}`,
+      success_url: `http://localhost:5173/course-progress/${courseId}`,
+      cancel_url: `http://localhost:5173/course-detail/${courseId}`,
       metadata: {
         courseId,
         userId,
@@ -56,7 +56,7 @@ export const createCheckoutSession = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      url: session.url, // Send the Stripe link back to frontend
+      url: session.url, 
     });
   } catch (error) {
     console.error("Checkout Error:", error);
@@ -120,40 +120,40 @@ export const stripeWebhook = async (req, res) => {
 };
 
 export const getCourseStatus = async (req, res) => {
-    try {
-        const { courseId } = req.params;
-        const userId = req.id;
+  try {
+    const { courseId } = req.params;
+    const userId = req.id;
 
-        const course = await Course.findById(courseId);
-        if (!course) {
-            return res.status(404).json({ message: "Course not found" });
-        }
-
-        const isEnrolled = course.enrolledStudents.includes(userId);
-
-        return res.status(200).json({ enrolled: isEnrolled });
-    } catch (error) {
-        console.error("Status Error:", error);
-        res.status(500).json({ message: "Error fetching status" });
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
     }
+
+    const isEnrolled = course.enrolledStudents.includes(userId);
+
+    return res.status(200).json({ enrolled: isEnrolled });
+  } catch (error) {
+    console.error("Status Error:", error);
+    res.status(500).json({ message: "Error fetching status" });
+  }
 };
 
 export const getAllPurchasedCourses = async (req, res) => {
-    try {
-        const userId = req.id;
-        
-        // Find completed purchases and populate the course details
-        const purchased = await CoursePurchase.find({ 
-            userId, 
-            status: 'completed' 
-        }).populate('courseId');
+  try {
+    const userId = req.id;
 
-        return res.status(200).json({
-            success: true,
-            purchasedCourses: purchased.map(p => p.courseId)
-        });
-    } catch (error) {
-        console.error("Fetch Error:", error);
-        res.status(500).json({ message: "Error fetching purchased courses" });
-    }
+    // Find completed purchases and populate the course details
+    const purchased = await CoursePurchase.find({
+      userId,
+      status: "completed",
+    }).populate("courseId");
+
+    return res.status(200).json({
+      success: true,
+      purchasedCourses: purchased.map((p) => p.courseId),
+    });
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    res.status(500).json({ message: "Error fetching purchased courses" });
+  }
 };

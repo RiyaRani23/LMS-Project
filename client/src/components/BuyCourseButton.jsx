@@ -17,7 +17,7 @@ const BuyCourseButton = ({ courseId, isEnrolled }) => {
       try {
         const response = await createCheckoutSession(courseId).unwrap();
         if (response.url) {
-          window.location.href = response.url; // Redirect to Stripe Checkout
+          window.location.assign(response.url);  
         }
       } catch (error) {
         toast.error(error?.data?.message || "Failed to initiate purchase.");
@@ -27,7 +27,7 @@ const BuyCourseButton = ({ courseId, isEnrolled }) => {
 
   return (
     <Button
-      onClick={handleAction}
+     onClick={() => handleAction(courseId)}
       disabled={isLoading}
       className="w-full py-6 text-lg font-bold bg-blue-600 hover:bg-blue-700 shadow-lg transition-all"
     >

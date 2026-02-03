@@ -9,7 +9,7 @@ const Courses = () => {
   if (isError) {
     return (
       <div className="text-center py-10 text-red-500">
-        <p>Failed to load courses. Please try again later.</p>
+        <p>Failed to load courses. Please login.</p>
       </div>
     );
   }
