@@ -1,5 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-import "./App.css";
 import Login from "./pages/login.jsx";
 import HeroSection from "./pages/student/HeroSection";
 import MainLayout from "./Layout/MainLayout";

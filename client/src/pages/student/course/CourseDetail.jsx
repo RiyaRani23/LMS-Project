@@ -1,6 +1,6 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom"; // Added useNavigate
-import { useGetCourseDetailWithPurchaseStatusQuery } from "@/features/api/purchaseApi"; // Correct hook
+import { useParams, useNavigate } from "react-router-dom"; 
+import { useGetCourseDetailWithPurchaseStatusQuery } from "@/features/api/purchaseApi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -37,7 +37,7 @@ const CourseDetail = () => {
           <div className="flex items-center gap-3">
             <Badge className="bg-blue-600 uppercase text-[10px]">{course.courseLevel}</Badge>
             <span className="text-sm text-gray-300">
-              Created by <span className="text-blue-400 font-bold">{course.creator?.name}</span>
+              Created by {" "} <span className="text-blue-400 font-bold">{course.creator?.name}</span>
             </span>
           </div>
           <div className="flex items-center gap-4 text-sm text-gray-400">
