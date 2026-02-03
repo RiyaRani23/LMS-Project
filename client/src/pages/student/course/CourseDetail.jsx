@@ -12,7 +12,6 @@ const CourseDetail = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
 
-  // 1. Use the combined query hook
   const { data, isLoading, isError } = useGetCourseDetailWithPurchaseStatusQuery(courseId);
 
   if (isLoading) return <p className="text-center py-10 font-medium">Loading course details...</p>;
@@ -24,7 +23,6 @@ const CourseDetail = () => {
       </p>
     );
 
-  // 2. Destructure data from the combined response
   const { course, purchased } = data;
 
   return (
@@ -53,7 +51,6 @@ const CourseDetail = () => {
           <p className="text-sm">Students enrolled: {course.enrolledStudents?.length || 0}</p>
         </div>
 
-        {/* Purchase Card */}
         <Card className="w-full md:w-80 shadow-2xl border-none overflow-hidden">
           <img
             src={course.courseThumbnail}
@@ -66,7 +63,6 @@ const CourseDetail = () => {
             <div className="text-2xl font-bold text-zinc-600">₹{course.coursePrice}</div>
           </CardContent>
           <CardFooter className="flex justify-center p-4 pt-0">
-            {/* 3. Conditional rendering based on 'purchased' flag */}
             {purchased ? (
               <Button 
                 onClick={() => navigate(`/course-progress/${courseId}`)} 

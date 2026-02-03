@@ -153,15 +153,32 @@ export const getAllPurchasedCourses = async (req, res) => {
     const purchased = await CoursePurchase.find({
       userId,
       status: "completed",
-    }).populate("courseId");
+    }).populate({
+      path: "courseId",
+      select: "courseTitle courseThumbnail coursePrice" 
+    });
+
+    if (!purchased || purchased.length === 0) {
+      return res.status(200).json({
+        success: true,
+        purchasedCourses: [],
+      });
+    }
+
+    const validPurchasedCourses = purchased
+      .map((p) => p.courseId)
+      .filter((course) => course !== null);
 
     return res.status(200).json({
       success: true,
-      purchasedCourses: purchased.map((p) => p.courseId),
+      purchasedCourses: validPurchasedCourses,
     });
   } catch (error) {
     console.error("Fetch Error:", error);
-    res.status(500).json({ message: "Error fetching purchased courses" });
+    res.status(500).json({ 
+      success: false, 
+      message: "Error fetching purchased courses" 
+    });
   }
 };
 

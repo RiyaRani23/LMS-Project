@@ -13,6 +13,7 @@ export const purchaseApi = createApi({
       return headers;
     },
   }),
+  tagTypes: ["Course", "CourseProgress"],
   endpoints: (builder) => ({
     createCheckoutSession: builder.mutation({
       query: (courseId) => ({
@@ -34,10 +35,6 @@ export const purchaseApi = createApi({
       ],
     }),
 
-    getCourseStatus: builder.query({
-      query: (courseId) => `/course-status/${courseId}`,
-    }),
-
     getAllPurchasedCourses: builder.query({
       query: () => "/",
     }),
@@ -46,7 +43,7 @@ export const purchaseApi = createApi({
 
 export const {
   useCreateCheckoutSessionMutation,
-  useGetCourseStatusQuery,
   useGetAllPurchasedCoursesQuery,
   useGetCourseProgressQuery,
+  useGetCourseDetailWithPurchaseStatusQuery,
 } = purchaseApi;

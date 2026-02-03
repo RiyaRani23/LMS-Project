@@ -10,7 +10,7 @@ router.route("/webhook").post(stripeWebhook);
 
 router.get("/course-detail/:courseId", isAuthenticated, getCourseDetailWithPurchaseStatus);
 
-router.route("/").get(isAuthenticated, getAllPurchasedCourses);
+router.route("/").get(getAllPurchasedCourses);
 
 router.get("/course-progress/:courseId", isAuthenticated, getCourseProgress);
 
