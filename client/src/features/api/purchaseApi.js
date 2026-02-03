@@ -38,6 +38,14 @@ export const purchaseApi = createApi({
     getAllPurchasedCourses: builder.query({
       query: () => "/",
     }),
+
+    updateLectureProgress: builder.mutation({
+      query: ({ courseId, lectureId }) => ({
+        url: `/course-progress/${courseId}/lecture/${lectureId}/view`,
+        method: "POST",
+      }),
+      invalidatesTags: ["CourseProgress"],
+    }),
   }),
 });
 
@@ -46,4 +54,5 @@ export const {
   useGetAllPurchasedCoursesQuery,
   useGetCourseProgressQuery,
   useGetCourseDetailWithPurchaseStatusQuery,
+  useUpdateLectureProgressMutation,
 } = purchaseApi;

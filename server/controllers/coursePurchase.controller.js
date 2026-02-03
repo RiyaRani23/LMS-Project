@@ -2,6 +2,8 @@ import Stripe from "stripe";
 import { Course } from "../models/course.model.js";
 import { CoursePurchase } from "../models/coursePurchase.model.js";
 import { Lecture } from "../models/lecture.model.js";
+import { CourseProgress } from "../models/courseProgress.model.js";
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -186,30 +188,3 @@ export const getAllPurchasedCourses = async (req, res) => {
   }
 };
 
-export const getCourseProgress = async (req, res) => {
-  try {
-    const { courseId } = req.params;
-    const userId = req.id; // From isAuthenticated middleware
-
-    const course = await Course.findById(courseId).populate("lectures");
-    if (!course) {
-      return res.status(404).json({ message: "Course not found" });
-    }
-
-    const isEnrolled = course.enrolledStudents.includes(userId);
-    if (!isEnrolled) {
-      return res.status(403).json({ 
-        success: false, 
-        message: "You are not enrolled in this course." 
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      course,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
