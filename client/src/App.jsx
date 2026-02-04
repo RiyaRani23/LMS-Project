@@ -16,6 +16,7 @@ import EditLecture from "./pages/admin/lecture/EditLecture";
 import { Toaster } from "@/components/ui/sonner";
 import CourseDetail from "./pages/student/course/CourseDetail";
 import CourseProgress from "./pages/student/course/CourseProgress";
+import SearchPage from "./pages/student/search/SearchPage.jsx";
 
 const appRouter = createBrowserRouter([
   {
@@ -43,14 +44,17 @@ const appRouter = createBrowserRouter([
         path: "profile",
         element: <Profile />,
       },
-
+      {
+        path: "course/search",
+        element: <SearchPage />,
+      },
       {
         path: "/course-detail/:courseId",
         element: <CourseDetail />,
       },
       {
         path: "course-progress/:courseId",
-        element: <CourseProgress/>,
+        element: <CourseProgress />,
       },
 
       {

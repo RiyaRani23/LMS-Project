@@ -110,8 +110,21 @@ export const courseApi = createApi({
         { type: "Course", id: courseId },
       ],
     }),
+
+    getSearchCourse: builder.query({
+      query: ({ searchQuery, categories, sortByPrice }) => ({
+        url: "/search",
+        method: "GET",
+        params: {
+          query: searchQuery || "",
+          categories: categories?.join(",") || "", 
+          sort: sortByPrice || "",
+        },
+      }),
+    }),
   }),
 });
+ 
 
 export const {
   useCreateCourseMutation,
@@ -127,4 +140,5 @@ export const {
   useDeleteCourseMutation,
   useGetPublishedCoursesQuery,
   useGetCourseDetailByIdQuery,
+  useGetSearchCourseQuery,
 } = courseApi;

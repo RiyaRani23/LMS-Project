@@ -58,7 +58,6 @@ export const createCourse = async (req, res) => {
   }
 };
 
-//  Get All Courses Created by a Specific Instructor
 export const getCreatorCourses = async (req, res) => {
   try {
     const userId = req.id;
@@ -426,5 +425,43 @@ export const togglePublishCourse = async (req, res) => {
     return res.status(500).json({
       message: "Failed to update course status",
     });
+  }
+};
+
+export const getSearchCourse = async (req, res) => {
+  try {
+    const { query, categories, sort } = req.query;
+
+    const searchCriteria = {};
+    if (query) {
+      searchCriteria.$or = [
+        { courseTitle: { $regex: query, $options: "i" } },
+        { subTitle: { $regex: query, $options: "i" } },
+        { category: { $regex: query, $options: "i" } },
+      ];
+    }
+
+    if (categories) {
+      const categoryArray = categories.split(",");
+      searchCriteria.category = { $in: categoryArray };
+    }
+
+    let coursesQuery = Course.find(searchCriteria).populate("creator", "name photoUrl");
+
+    if (sort === "low") {
+      coursesQuery = coursesQuery.sort({ coursePrice: 1 });
+    } else if (sort === "high") {
+      coursesQuery = coursesQuery.sort({ coursePrice: -1 }); 
+    }
+
+    const courses = await coursesQuery;
+
+    return res.status(200).json({
+      success: true,
+      courses: courses || [],
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Search failed" });
   }
 };

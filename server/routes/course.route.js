@@ -15,10 +15,12 @@ import {
   deleteCourse,
   getPublishedCourses,
   getCourseDetailById,
+  getSearchCourse,
 } from "../controllers/course.controller.js";
 
 const router = express.Router();
 
+router.route("/search").get(getSearchCourse); 
 router.route("/detail/:courseId").get(getCourseDetailById);
 
 // Course Routes
@@ -48,5 +50,7 @@ router
   .patch(isAuthenticated, upload.single("videoFile"), editLecture);
 
 router.route("/:courseId").patch(isAuthenticated, togglePublishCourse);
+
+router.route("/:id").get(getCourseById);
 
 export default router;
